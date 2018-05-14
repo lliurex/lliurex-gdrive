@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=LliureX Gdrive Client
+Comment=LliureX Gdrive Client
+Exec=/usr/bin/lliurex-gdrive-autostart
+Terminal=false
+Type=Application

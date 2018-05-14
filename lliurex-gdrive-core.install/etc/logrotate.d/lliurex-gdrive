@@ -1,0 +1,9 @@
+~/.config/lliurex-google-drive-profiles/lliurex-gdrive.log{
+	monthly
+	missingok
+	rotate 7
+	compress
+	maxsize 10M
+	notifempty
+}
+

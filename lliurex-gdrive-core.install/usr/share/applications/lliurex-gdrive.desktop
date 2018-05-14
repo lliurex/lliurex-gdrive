@@ -1,0 +1,21 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=lliurex-gdrive
+Name[en]=LliureX Google Drive
+Name[es]=LliureX Google Drive
+Name[ca_ES]=LliureX Google Drive
+Name[ca_ES.UTF-8]=LliureX Google Drive
+Name[ca_ES@valencia]=LliureX Google Drive
+Comment=Client to sync Google Drive accounts
+Comment[es]=Cliente para sincronizar cuentas de Google Drive
+Comment[ca_ES]=Client per sincronitzar comptes de Google Drive
+Comment[ca_ES@valencia]=Client per sincronitzar comptes de Google Drive
+Comment[ca_ES.UTF-8@valencia]=Client per sincronitzar comptes de Google Drive
+Exec=lliurex-gdrive
+TryExec=lliurex-gdrive
+Terminal=false
+Icon=gdrive
+Type=Application
+GenericName=lliurex-gdrive
+Categories=Network;

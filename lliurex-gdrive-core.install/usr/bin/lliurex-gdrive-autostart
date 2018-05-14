@@ -1,0 +1,145 @@
+#!/usr/bin/env python
+import lliurexgdrive
+import os
+import subprocess
+import syslog
+import dbus
+from dbus.mainloop.glib import DBusGMainLoop
+
+import gi
+gi.require_version("Gtk","3.0")
+from gi.repository import Gtk,GObject,Gio
+
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+PROFILES_PATH="~/.config/lliurex-google-drive-profiles/configProfiles"
+DISABLE_INDICATOR="~/.config/lliurex-google-drive-profiles/disableIndicator"
+LOCK_INDICATOR="~/.config/lliurex-google-drive-profiles/lgdIndicator.lock"
+LOCK_GUI="~/.config/lliurex-google-drive-profiles/lgdGUI.lock"
+
+
+class LliurexGdriveAutostart:
+
+	def __init__(self):
+		
+		self.LliurexGoogleDriveManager=lliurexgdrive.LliurexGoogleDriveManager()
+		self.disable_indicator=os.path.expanduser(DISABLE_INDICATOR)
+		self.profiles_path=os.path.expanduser(PROFILES_PATH)
+		self.lock_gui=os.path.expanduser(LOCK_GUI)
+		self.lock_indicator=os.path.expanduser(LOCK_INDICATOR)
+
+		self.launch_endsession()
+		self.mount_drives()
+		self.launch_indicator()
+		
+	#def __init__
+
+	def mount_drives(self):
+
+		if os.path.exists(self.profiles_path):
+			if len(self.LliurexGoogleDriveManager.profiles_config):
+				self.LliurexGoogleDriveManager.mount_drives()
+
+	#def mount_drives		
+		
+	
+	def launch_indicator(self):
+		
+		self.delete_lock()
+		if len(self.LliurexGoogleDriveManager.profiles_config):
+			if not os.path.exists(self.disable_indicator):
+				#os.system("/usr/bin/lliurexGdriveIndicator")
+				subprocess.Popen(["/usr/bin/lliurexGdriveIndicator"],preexec_fn=os.setpgrp)
+			
+	#def launch_indicator		
+			
+	def launch_endsession(self):
+
+		syslog.syslog("INIT GDRIVE")
+		DBusGMainLoop(set_as_default=True)
+		self.session_bus = dbus.SessionBus()
+		
+		# ###########################
+		#CAPTURE END SESSION SIGNAL
+		# ###########################
+		proxy = self.session_bus.get_object('org.gnome.SessionManager','/org/gnome/SessionManager')
+		proxy=dbus.Interface(proxy,"org.gnome.SessionManager")
+
+		d_id=os.getenv("DESKTOP_AUTOSTART_ID")
+		if d_id==None:
+			d_id="lliurex-gdrive"
+
+		print d_id
+		self.client_id=proxy.RegisterClient("lliurex-gdrive",d_id)
+		print self.client_id
+		syslog.syslog(self.client_id)
+		proxy = self.session_bus.get_object('org.gnome.SessionManager',self.client_id)
+		print proxy
+		self.cp_proxy=dbus.Interface(proxy,"org.gnome.SessionManager.ClientPrivate")
+		
+		self.cp_proxy.connect_to_signal("QueryEndSession",self.on_query_end_session)
+		self.cp_proxy.connect_to_signal("EndSession",self.on_end_session)
+		self.cp_proxy.connect_to_signal("Stop",self.on_stop_session)
+
+	#def launch_endsession	
+
+
+	def on_query_end_session(self,sender):
+		
+		self.cp_proxy.EndSessionResponse(True,"saving session.")
+
+	#def on_query_end_session 	
+
+	def on_end_session(self,sender):
+		
+		self.dismount()
+		self.delete_lock()
+		self.quit()
+		self.cp_proxy.EndSessionResponse(True,"unregistering")
+
+	#def on_query_end_session	
+
+	def on_stop_session(self):
+
+		sys.exit(0)	
+
+	#def on_stop_session	
+		
+	def dismount(self):
+		
+		if len(self.LliurexGoogleDriveManager.profiles_config):
+			if self.LliurexGoogleDriveManager.check_google_connection():
+				for profile in self.LliurexGoogleDriveManager.profiles_config:
+					mountpoint=self.LliurexGoogleDriveManager.profiles_config[profile]["mountpoint"]
+					status=self.LliurexGoogleDriveManager.check_mountpoint_status(mountpoint)
+					if status["status"]:
+						self.LliurexGoogleDriveManager.dismount_mountpoint(mountpoint,profile)
+
+	#def dismount				
+					
+	def delete_lock(self):
+				
+		syslog.syslog("GDRIVE-TOKEN")
+		
+		if os.path.exists(self.lock_indicator):
+			os.remove(self.lock_indicator)
+
+		if os.path.exists(self.lock_gui):
+			os.remove(self.lock_gui)	
+	
+	#def delete_lock		
+
+	def quit(self):
+		
+		Gtk.main_quit()		
+		
+	#def quit	
+
+if __name__=="__main__":
+
+	llxgd=LliurexGdriveAutostart()
+	#llxgd.mount_drives()
+	#llxgd.launch_indicator()	
+	#llxgd.launch_endsession()
+	Gtk.main()

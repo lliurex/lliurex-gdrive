@@ -1,0 +1,17 @@
+Name=lliurex-gdrive
+Name[en]=LliureX GDrive
+Name[es]=LliureX GDrive
+Name[qcv]=LliureX GDrive
+Name[ca_ES]=LliureX GDrive
+Name[ca_ES.UTF-8]=LliureX GDrive
+Name[ca_ES@valencia]=LliureX GDrive
+Comment=Client for Google Drive
+Comment[es]=Cliente para Google Drive
+Comment[qcv]=Client per a Google Drive
+Comment[ca_ES]=Client per a Google Drive
+Comment[ca_ES@valencia]=Client per a Google Drive
+Icon=zero-lliurex-gdrive
+Category=Internet
+ScriptPath=zero-lliurex-gdrive.zmd
+Service=False
+Groups=*

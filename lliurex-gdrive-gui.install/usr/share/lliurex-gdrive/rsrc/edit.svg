@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="32"
+   width="32"
+   viewBox="0 0 8.4666665 8.4666669"
+   version="1.1"
+   id="svg4"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="edit.svg">
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     pagecolor="#8488ff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="926"
+     id="namedview6"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="4.7572176"
+     inkscape:cx="-64.226214"
+     inkscape:cy="-6.4923343"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <metadata
+     id="metadata2">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <path
+     inkscape:connector-curvature="0"
+     d="m 0.55522786,6.3791081 0,1.5323304 1.53233274,0 L 6.6069138,3.3920833 5.0745831,1.8597536 0.55522786,6.3791081 Z M 7.7919158,2.2070814 c 0.1593638,-0.1593625 0.1593638,-0.4167942 0,-0.5761559 L 6.8357418,0.67475085 c -0.1593615,-0.15936315 -0.4167943,-0.15936315 -0.5761556,0 L 5.5118078,1.422527 7.0441405,2.9548586 7.7919158,2.2070814 Z"
+     id="path4"
+     style="fill:#ffffff" />
+</svg>

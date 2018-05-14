@@ -1,0 +1,180 @@
+
+	GtkLabel {
+		font: Roboto;
+	}
+	
+	#OPTION_LABEL {
+		font: Roboto Light;
+
+	}
+
+	#MSG_LABEL {
+
+		color: #3366cc;
+		font: Roboto Bold 11;
+			
+	}	
+
+	#GDRIVE_FOLDER {
+		
+		color: #3366cc;
+		font: Roboto 11;
+
+	}
+
+	#MSG_ERROR_LABEL {
+
+		color: #CC0000;
+		font: Roboto Bold 11; 
+	}
+
+	#OPTION_BUTTON {
+		
+		border: 0px;
+		background-color: #ffffff;
+		box-shadow: -0.5px 2px 3px #cdcdcd;
+		
+	}
+
+	#OPTION_BUTTON:hover {
+		border: 0px;
+		background-color: #ff9400	;
+		box-shadow: -0.5px 4px 4px #cecece;
+	}
+
+	#OPTION_BUTTON .label {
+		color: rgba(0,0,0,0.5);
+	}
+	
+	
+	#SELECTED_OPTION_BUTTON {
+		border: 0px;
+		background-color: #ff6600;
+		
+		
+		
+	}
+
+	#SELECTED_OPTION_BUTTON:hover {
+		border: 0px;
+		background-color: #ff9400;
+		box-shadow: -0.5px 2px 4px #9d9d9d;
+	}
+
+	#SELECTED_OPTION_BUTTON .label {
+		color: rgba(255,255,255,0.8);
+
+	}	
+	
+    #WINDOW{
+		
+		background-color: #f1f1f1;
+		
+	}
+
+
+	#DELETE_ITEM_BUTTON {
+			border-width: 5px;
+			border-radius: 0px;
+			padding: 0px 0px;
+			box-shadow: none;
+			border-color: #db3237;
+			
+			color: white;
+			background-image:-gtk-gradient (linear,	left top, left bottom, from (#db3237),  to (#db3237));
+			text-shadow: none;
+			
+	}
+		
+	#DELETE_ITEM_BUTTON:hover {
+		border-color: #e56f73;
+		background-image:-gtk-gradient (linear,	left top, left bottom, from (#e56f73),  to (#e25a5e));
+		box-shadow: -0.5px 3px 3px #aaaaaa;
+	}
+
+
+	#MOUNT_ITEM_BUTTON {
+			border-width: 5px;
+			border-radius: 0px;
+			padding: 0px 0px;
+			box-shadow: none;
+			border-color: #3dbb55;
+			
+			color: white;
+			background-image:-gtk-gradient (linear,	left top, left bottom, from (#3dbb55),  to (#3dbb55));
+			text-shadow: none;
+			
+	}
+		
+	#MOUNT_ITEM_BUTTON:hover {
+		border-color: #77cf88;
+		background-image:-gtk-gradient (linear,	left top, left bottom, from (#77cf88),  to (#77cf88));
+		box-shadow: -0.5px 3px 3px #aaaaaa;
+	}
+
+	
+	#WARNING_ITEM_BUTTON {
+			border-width: 5px;
+			border-radius: 0px;
+			padding: 0px 0px;
+			box-shadow: none;
+			border-color: #f4c20d;
+			
+			color: white;
+			background-image:-gtk-gradient (linear,	left top, left bottom, from (#f4c20d),  to (#f4c20d));
+			text-shadow: none;
+			
+	}
+		
+	#WARNING_ITEM_BUTTON:hover {
+		border-color: #f7d045;
+		background-image:-gtk-gradient (linear,	left top, left bottom, from (#f7d045),  to (#f7d045));
+		box-shadow: -0.5px 3px 3px #aaaaaa;
+	}	
+
+		
+	#EDIT_ITEM_BUTTON {
+			border-width: 5px;
+			border-radius: 0px;
+			padding: 0px 0px;
+			box-shadow: none;
+			border-color: #4784ed;
+			
+			color: white;
+			background-image:-gtk-gradient (linear,	left top, left bottom, from (#4784ed),  to (#4784ed));
+			text-shadow: none;
+			
+	}
+		
+	#EDIT_ITEM_BUTTON:hover {
+		border-color: #7ea8f2;
+		background-image:-gtk-gradient (linear,	left top, left bottom, from (#7ea8f2),  to (#7ea8f2));
+		box-shadow: -0.5px 3px 3px #aaaaaa;
+	}
+
+	#PROFILE_BOX {
+		background-color: #ffffff	;
+		box-shadow: -0.5px 3px 2px #cdcdcd;
+		
+	}
+	
+	#PROFILE_BOX:hover {
+		box-shadow: -0.5px 3px 2px #cacaca;
+	}
+	
+	
+	#ITEM_LIST {
+		background-image:-gtk-gradient (linear,	0 0, 0 1, 
+			
+				color-stop(0, rgba(255,255,255,1)),
+				color-stop(0.1, rgba(255,0,0,1)),
+				color-stop(0.2, rgba(0,255,0,1)),
+				color-stop(0.3, rgba(0,0,255,1)),
+				color-stop(0.4, rgba(255,255,0,1)),
+				color-stop(0.5, rgba(255,0,255,1)),
+				color-stop(0.6, rgba(0,255,255,1)),
+				color-stop(0.7, rgba(0,0,0,1)),
+				
+				color-stop(1, rgba(255,255,255,1))
+			);
+	}

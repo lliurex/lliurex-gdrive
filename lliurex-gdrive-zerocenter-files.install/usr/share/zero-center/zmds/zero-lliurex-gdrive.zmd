@@ -1,0 +1,10 @@
+#!/bin/sh
+
+
+exec /usr/bin/lliurex-gdrive
+
+exit 0
+
+
+
+

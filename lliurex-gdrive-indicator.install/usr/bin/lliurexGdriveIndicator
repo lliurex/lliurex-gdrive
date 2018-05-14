@@ -1,0 +1,973 @@
+#!/usr/bin/env python
+
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, Pango, GdkPixbuf, Gdk, Gio, GObject, GLib
+gi.require_version('AppIndicator3', '0.1')
+from gi.repository import AppIndicator3 as appindicator
+
+import os
+from os import listdir
+from os.path import isfile, isfile,isdir,join
+import threading
+import subprocess
+import sys
+import gettext
+import json
+import random
+import notify2
+import time
+import datetime
+import copy
+
+
+import pyinotify
+from pyinotify import WatchManager, Notifier, ThreadedNotifier, EventsCodes, ProcessEvent
+
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+import lliurexgdrive
+
+import gettext
+gettext.textdomain('lliurex-gdrive')
+_ = gettext.gettext
+
+LOCK_INDICATOR="~/.config/lliurex-google-drive-profiles/lgdIndicator.lock"
+LOCK_GUI="~/.config/lliurex-google-drive-profiles/lgdGUI.lock"
+RSRC="/usr/share/lliurex-gdrive/"
+MOUNT_ON_IMAGE=RSRC+"rsrc/mount_on.png"
+MOUNT_OFF_IMAGE=RSRC+"rsrc/mount_off.png"
+MOUNT_WARNING_IMAGE=RSRC+"rsrc/mount_warning.png"
+SP1=RSRC+"rsrc/sp1.png"
+SP2=RSRC+"rsrc/sp2.png"
+SP3=RSRC+"rsrc/sp3.png"
+SP4=RSRC+"rsrc/sp4.png"
+SP5=RSRC+"rsrc/sp5.png"
+SP6=RSRC+"rsrc/sp6.png"
+SP7=RSRC+"rsrc/sp7.png"
+SP8=RSRC+"rsrc/sp8.png"
+
+TIME_CHECK_STATUS=900000
+
+class LliurexGdriveIndicator:
+
+	WATCH_DIR=os.path.expanduser("~/.config/lliurex-google-drive-profiles/")
+	
+	def __init__(self,icon_name):
+		
+		self.lock_gui=os.path.expanduser(LOCK_GUI)
+		self.lock_indicator=os.path.expanduser(LOCK_INDICATOR)		
+
+		self.LliurexGoogleDriveManager=lliurexgdrive.LliurexGoogleDriveManager()
+		self.app_indicator=appindicator.Indicator.new("lliurex-gdrive",icon_name,appindicator.IndicatorCategory.APPLICATION_STATUS)
+		self.app_indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
+		self.menu = Gtk.Menu()
+		
+		self.menu.add_events(Gdk.EventMask.ALL_EVENTS_MASK)
+		self.app_indicator.set_menu(self.menu)
+		
+		self.profiles_info=self.LliurexGoogleDriveManager.profiles_config.copy()
+		self.current_status={}
+		self.blacklist=['.Trash','.Trash-1000']
+		self.init_files=[]
+		self.update_files=[]
+		self.local_changes={}
+		self.notifications_list=[]
+
+			
+		self.createLockToken()
+		self.check_initial_connection()
+		self.populate_menu()
+		self.start_inotify()
+		self.sync_threads={}
+		self.result_sync_threads={}
+		self.profile_clicked=[]
+		self.sp_cont={}
+		self.sp_img={}
+		self.checking_status=False
+		
+
+		GLib.timeout_add(TIME_CHECK_STATUS,self.check_status)
+		
+	#def __init__
+
+	def check_initial_connection(self):
+		
+		self.initial_connection=self.LliurexGoogleDriveManager.check_google_connection()
+		return
+
+	#def check_initial_connection 	
+
+	def generate_sync_threads(self,profile):
+		
+		id=int(random.random()*1000)		
+		t=threading.Thread(target=self.check_sync,args=(id,profile))
+		t.daemon=True
+		t.start()
+		self.sync_threads[id]={}
+		self.sync_threads[id]["thread"]=t
+		self.result_sync_threads[id]={}
+		return id
+
+	#def generate_sync_threads	
+	
+	def init_connect_thread(self):
+		
+		self.check_connect_t=threading.Thread(target=self.check_connect)
+		self.check_connect_t.daemon=True
+		self.check_connect_t.start()
+
+	#def init_connect_thread	
+		
+	def createLockToken(self):
+
+		#self.lockpath=os.path(LOCK_INDICATOR)
+		if not os.path.exists(self.lock_indicator):
+			f=open(self.lock_indicator,'w')
+			f.close
+
+	#def createLockToken
+			
+	def start_inotify(self):
+
+		inotify_t=threading.Thread(target=self._inotify)
+		inotify_t.daemon=True
+		inotify_t.start()
+
+	#def start_inotif
+
+
+	def _inotify(self):
+		
+		
+		wm=WatchManager()
+		mask= pyinotify.IN_CLOSE_WRITE
+		      
+			
+		class Process_handler(ProcessEvent):
+				
+			def __init__(self,main):
+				
+				self.main=main
+			
+				
+			def process_IN_CLOSE_WRITE(self,event):
+
+				self.main.update_info()
+				self.main.initial_connection=True
+
+				if os.path.expanduser(event.pathname)==os.path.join(LliurexGdriveIndicator.WATCH_DIR,"configProfiles"):
+					
+					for profile in self.main.update_profiles:
+						mountpoint_new=self.main.update_profiles[profile]["mountpoint"]
+						gdriveFolder_new=self.main.update_profiles[profile]["gdrive_folder"]
+						if not profile in self.main.profiles_info:
+							self.main.add_menu_item(profile,mountpoint_new)
+							wdd=wm.add_watch(mountpoint_new,mask,rec=True)
+						else:
+							mountpoint_old=self.main.profiles_info[profile]["mountpoint"]
+							gdriveFolder_old=self.main.profiles_info[profile]["gdrive_folder"]
+							if (mountpoint_new != mountpoint_old) or (gdriveFolder_new != gdriveFolder_old): 
+								'''
+								try:
+									ide=wm.get_wd(mountpoint_old)
+									if id !=None:
+										wdd=wm.rm_watch(ide,rec=False)
+								except Exception as e:
+									print "ERROR"
+									print str(e)
+									pass	
+								'''	
+								self.main.remove_folder_info(profile)
+								self.main.init_folders_info(profile,mountpoint_new)
+								wdd=wm.add_watch(mountpoint_new,mask,rec=True)
+
+					profile_rm=""
+					for item in self.main.menu.get_children():
+						if item.profile !="":
+							if not item.profile in self.main.update_profiles:
+								self.main.menu.remove(item)
+								profile_rm=item.profile
+
+					if profile_rm !="":
+						mountpoint=self.main.profiles_info[profile_rm]["mountpoint"]
+						'''
+						try:
+							ide=wm.get_wd(mountpoint)
+							wdd=wm.rm_watch(ide,rec=False)
+						except Exception as e:
+							print str(e)
+							pass
+						'''	
+
+						self.main.remove_folder_info(profile_rm)				
+								
+
+					self.main.profiles_info=self.main.update_profiles.copy()
+					self.main.menu.show_all()
+
+				else:
+					if 'ountToken' in os.path.basename(event.pathname):
+							tmp_profile=os.path.basename(event.pathname).split("__")[0]
+							tmp_profile=tmp_profile.decode("utf-8")
+							for item in self.main.profiles_info:
+								if item==tmp_profile:
+									tmp_mountpoint=self.main.profiles_info[item]["mountpoint"]
+									'''
+									try:
+										ide=wm.get_wd(tmp_mountpoint)
+										if id !=None:
+											wdd=wm.rm_watch(ide,rec=False)
+									except Exception as e:
+										print str(e)
+										pass
+									'''	
+									self.main.remove_folder_info(item)		
+									if 'MountToken' in os.path.basename(event.pathname):
+										self.main.init_folders_info(item,tmp_mountpoint)
+										wdd=wm.add_watch(tmp_mountpoint,mask,rec=True)
+									
+					else:	
+						time.sleep(2)
+						t=join(event.path,event.name)
+						if isfile(t):
+							
+							'''
+							for item in self.main.profiles_info:
+								tmp_mount=self.main.profiles_info[item]["mountpoint"]
+								
+								if event.path in tmp_mount:
+									cmd="google-drive-ocamlfuse -cc -label %s"%item
+									os.system(cmd)
+							'''		
+											
+							try:
+								
+								state=os.stat(t)
+								
+							except Exception as e:
+								print str(e)
+								t=t.split('trashinfo')
+								t=t[0]+'trashinfo'
+								state=os.stat(t)
+								
+							t=t.decode("utf-8")			
+							access=datetime.datetime.fromtimestamp(state.st_mtime)
+							self.main.local_changes[t]=access
+										
+		
+		notifier=Notifier(wm,Process_handler(self))
+		wdd=wm.add_watch(LliurexGdriveIndicator.WATCH_DIR,mask,rec=True)
+		
+		for profile in self.profiles_info:
+			path=os.path.expanduser(self.profiles_info[profile]["mountpoint"])
+			wdd=wm.add_watch(path,mask,rec=True)
+
+		
+		while True:
+			try:
+				
+				notifier.process_events()
+
+				if notifier.check_events():
+					notifier.read_events()
+
+			except Exception as e:
+				print str(e)
+				notifier.stop()
+		
+		return False
+			
+	
+	#def _inotify
+
+	def update_info(self):
+
+		f=open(self.LliurexGoogleDriveManager.config_file)
+
+		try:
+			self.update_profiles=json.load(f)
+		except:
+			self.update_profiles={}
+		
+		f.close()
+
+	#def update_info	
+	
+	def add_menu_item(self,profile,mountpoint):
+
+		if self.initial_connection:
+			status_info=self.LliurexGoogleDriveManager.check_mountpoint_status(mountpoint)
+			info=self.item_status_info(status_info)
+			self.current_status[profile]=status_info["status"]	
+		else:
+			status_info={}
+			status_info['status']=None
+			status_info['size']=0
+			status_info['used']=0
+			info=self.item_status_info(status_info)
+			self.current_status[profile]=None
+				
+		label_item=profile	
+		item=Gtk.ImageMenuItem()
+		item.set_label(label_item)
+		item.set_image(info["img"])
+		item.set_tooltip_text(info["tooltip"])
+		item.profile=profile
+		item.size=False
+		item.status=True
+		item.set_always_show_image(True)
+		item.connect("activate",self.item_clicked,profile)
+		self.menu.insert(item,0)
+
+		
+		item=Gtk.MenuItem()
+		label_item=info["used_size"]
+		item.set_label(label_item)
+		item.profile=profile
+		item.size=True
+		item.status=False
+		self.menu.insert(item,1)
+
+		item=Gtk.MenuItem()
+		label_item=_("Open folder")
+		item.set_label(label_item)
+		item.connect("activate",self.open_folder,profile)
+		item.profile=profile
+		item.size=False
+		item.status=False
+		self.menu.insert(item,2)
+
+		item=Gtk.MenuItem()
+		label_item=_("Update cache")
+		item.set_label(label_item)
+		item.set_tooltip_text(_("Click if do not see all the files in the Google Drive account"))
+		item.connect("activate",self.refresh_cache_clicked,profile)
+		item.profile=profile
+		item.size=False
+		item.status=False
+		self.menu.insert(item,3)
+
+		item=Gtk.SeparatorMenuItem()
+		item.profile=profile
+		item.size=False
+		item.status=False
+		self.menu.insert(item,4)
+		self.init_folders_info(profile,mountpoint)
+
+
+	#def add_menu_item	
+
+
+	def populate_menu(self,empty=True):
+		
+		
+		if empty:
+			for c in self.menu.get_children():
+				self.menu.remove(c)
+		
+		
+		for profile in self.profiles_info:
+			mountpoint=self.profiles_info[profile]["mountpoint"]
+			self.add_menu_item(profile,mountpoint)
+			
+			
+		item=Gtk.ImageMenuItem()
+		label_item=_("Open Lliurex GDrive")
+		item.set_label(label_item)
+		img=Gtk.Image()
+		img.set_from_stock(Gtk.STOCK_PREFERENCES,Gtk.IconSize.MENU)
+		item.set_image(img)
+		item.set_always_show_image(True)
+		item.connect("activate",self.open_gui)
+		item.profile=""
+		item.size=False
+		item.status=False
+		self.menu.append(item)
+
+		item=Gtk.ImageMenuItem()
+		img=Gtk.Image()
+		img.set_from_stock(Gtk.STOCK_CLOSE,Gtk.IconSize.MENU)
+		item.set_image(img)
+		item.set_always_show_image(True)
+		label_item=_("Close")
+		item.set_label(label_item)
+		item.connect("activate",self.quit)
+		item.profile=""
+		item.size=False
+		item.status=False
+		self.menu.append(item)
+
+
+		self.menu.show_all()
+		
+		
+	#def populate_menu
+	
+	def init_folders_info(self,profile,mountpoint):
+
+		self.folders_info={}
+		tmp={}
+		self.folders_info['profile']=profile
+		tmp['profile']=profile
+		tmp['notifications']=[]
+		self.notifications_list.append(tmp)
+		self.files=set()
+		self.controlDirectory(mountpoint)
+		self.folders_info['files']=self.files
+		self.init_files.append(self.folders_info)
+	
+	#def init_folders_info				
+
+
+	def controlDirectory(self,path):
+		
+		
+		for item in listdir(path):
+			if item not in self.blacklist:
+				
+				t=join(path,item)
+
+				if isfile(t):
+					
+					compartido=False
+					state=os.stat(t)
+					access=datetime.datetime.fromtimestamp(state.st_mtime)
+					tmp=t+":__"+str(access)
+					
+					self.files.add(tmp)
+				else:
+					if isdir(t):
+						self.controlDirectory(t)	
+
+	#def controlDirectory					
+				 		
+	def remove_folder_info(self,profile):
+
+		i=0
+		for item in self.init_files:
+			if profile ==item["profile"]:
+				self.init_files.pop(i)
+			i=i+1	
+
+		i=0
+		for item in self.notifications_list:
+			if profile ==item["profile"]:
+				self.notifications_list.pop(i)
+
+			i=i+1		
+
+	#def remove_folder_info		
+
+
+	def item_clicked(self,widget,profile):
+	
+		if profile not in self.profile_clicked:
+			self.profile_clicked.append(profile)
+			id=self.generate_sync_threads(profile)
+			self.sp_cont[id]=0
+			self.sp_img[id]=Gtk.Image.new_from_file(SP1)
+			GLib.timeout_add(100,self.pulsate_check_sync,id,widget,profile)
+			
+		
+	#def item_clicked
+
+	def spinner_sync(self,id):
+	
+		if self.sp_cont[id]>80:
+			self.sp_cont[id]=0
+			
+		if self.sp_cont[id]==0:
+			img=Gtk.Image.new_from_file(SP1)
+			self.sp_img[id]=img
+		elif self.sp_cont[id]==10:
+			img=Gtk.Image.new_from_file(SP2)
+			self.sp_img[id]=img			
+		elif self.sp_cont[id]==20:
+			img=Gtk.Image.new_from_file(SP3)
+			self.sp_img[id]=img
+		elif self.sp_cont[id]==30:
+			img=Gtk.Image.new_from_file(SP4)
+			self.sp_img[id]=img
+		elif self.sp_cont[id]==40:
+			img=Gtk.Image.new_from_file(SP5)
+			self.sp_img[id]=img	
+		elif self.sp_cont[id]==50:
+			img=Gtk.Image.new_from_file(SP6)
+			self.sp_img[id]=img	
+		elif self.sp_cont[id]==60:
+			img=Gtk.Image.new_from_file(SP7)
+			self.sp_img[id]=img	
+		elif self.sp_cont[id]==70:
+			img=Gtk.Image.new_from_file(SP8)
+			self.sp_img[id]=img				
+				
+	#def spinner_sync	
+			
+	def pulsate_check_sync(self,id,widget,profile):
+		
+		
+		if self.sync_threads[id]["thread"].is_alive():
+			self.spinner_sync(id)
+			widget.set_image(self.sp_img[id])
+			widget.set_tooltip_text(_("Applying changes..."))	
+			self.sp_cont[id]=self.sp_cont[id]+1
+			return True
+		
+		else:
+			self.profile_clicked.remove(profile)
+			self.current_status[profile]=self.result_sync_threads[id]["status_info"]["status"]	
+			if self.result_sync_threads[id]["status_mod"]["result"]==False:
+				if self.result_sync_threads[id]["status_mod"]["code"]==8:
+					message=_("Error: Unable to connect with google")	
+				else:
+					status=self.current_status[profile]
+					if status:
+						action=_("dismount")
+					else:
+						action=_("mount")	
+					message=_("Error: Unable to ") + action + " " 
+			else:
+				if self.result_sync_threads[id]["status_mod"]["code"]==9:
+					message=_("Status updated. Now you can change it")
+				else:
+					message=_("Changes applied successfully")
+			
+			self.show_message(profile + ": " + message)
+			
+			info=self.item_status_info(self.result_sync_threads[id]["status_info"])
+			
+			for item in self.menu.get_children():
+					if item.size:
+						if item.profile==profile:
+							item.set_label(info["used_size"])
+				
+			widget.set_tooltip_text(info["tooltip"])
+			widget.set_image(info["img"])	
+			self.sync_threads.pop(id)
+			self.sp_cont.pop(id)
+			self.sp_img.pop(id)
+			self.result_sync_threads.pop(id)
+		
+		return False
+
+	#def pulsate_check_sync	
+			
+	
+	def	check_sync(self,id,profile):
+		
+		mountpoint=self.profiles_info[profile]["mountpoint"]
+
+		current_status=self.current_status[profile]
+		
+		self.result_sync_threads[id]["status_mod"],self.result_sync_threads[id]["status_info"]=self.LliurexGoogleDriveManager.sync_profile(profile,mountpoint,current_status)
+
+
+		#self.result_connect_threads[id]["value"]=self.LliurexGoogleDriveManager.check_google_connection()
+
+	#def check_sync	
+	
+	def open_folder(self,widget,profile):
+
+		
+		mountpoint=self.profiles_info[profile]["mountpoint"]
+		cmd="xdg-open " + mountpoint.encode("utf-8")
+
+		os.system(cmd)	
+
+	#def open_folder
+
+	def refresh_cache_clicked (self,widget,profile):
+
+		message=self.refresh_cache_command(profile)
+		
+		message=message.decode("UTF-8")
+
+		time.sleep(0.5)
+		self.show_message(profile + ": " + message)	
+
+	#def refresh_cache_menu
+
+	def refresh_cache_command(self,profile):
+
+		profile=profile.encode("utf-8")
+
+		try:
+			cmd="google-drive-ocamlfuse -cc -label %s"%profile
+			os.system(cmd)
+			message=_("Cache updated successfully")
+				
+		except Exception as e:
+			message=_("An error occurred updating the cache. Try again")
+
+		return message	
+
+	#def refresh_cache_command	
+
+	def open_gui(self,widget):
+		
+		if not os.path.exists(self.lock_gui):
+			cmd='/usr/bin/lliurex-gdrive' +"&" 
+			os.system(cmd)
+
+	#def open_gui
+		
+	def item_status_info(self,status_info):
+	
+		size=status_info["size"]
+		used=status_info["used"]
+
+		if status_info['status']==None:
+			img=Gtk.Image.new_from_file(MOUNT_WARNING_IMAGE)
+			tooltip=_("Without connection. Clicked to update")
+			used_size=_("Used: not available")
+		
+		elif status_info["status"]:
+			img=Gtk.Image.new_from_file(MOUNT_ON_IMAGE)
+			tooltip=_("Mounted. Clicked to dismount now")
+			used_size=_("Used: %s of %s")%(used,size)
+		
+		else:
+			img=Gtk.Image.new_from_file(MOUNT_OFF_IMAGE)
+			tooltip=_("Dismounted. Clicked to mount now")
+			used_size=_("Used: not available")	
+
+		return {"img":img ,"tooltip":tooltip, "used_size":used_size}	
+
+	#def item_status_info			
+
+	def check_status(self):
+		
+		if not self.checking_status:
+			self.checking_status=True
+			self.init_connect_thread()
+			GLib.timeout_add(100,self.get_status_info,id)
+
+		return True
+		
+		
+	#def check_status
+	
+	def get_status_info(self,id):
+		
+		if self.check_connect_t.is_alive():
+			return True
+		
+		else:	
+			self.update_files=[]
+			self.checking_status=False
+			#self.connect_threads.pop(id)
+			for profile in self.profiles_info:
+				if self.connection:
+					self.refresh_cache_command(profile)
+					mountpoint=self.profiles_info[profile]["mountpoint"]
+					status_info=self.LliurexGoogleDriveManager.check_mountpoint_status(mountpoint)
+					self.update_folders_info(profile,mountpoint)
+
+				else:
+					status_info={}
+					status_info['status']=None
+					status_info['size']=0
+					status_info['used']=0
+					
+				info=self.item_status_info(status_info)
+				self.current_status[profile]=status_info["status"]
+								
+				for item in self.menu.get_children():
+					if item.profile==profile:
+						if item.size:
+							item.set_label(info["used_size"])
+						if item.status:
+							item.set_tooltip_text(info["tooltip"])
+							item.set_image(info["img"])
+		
+		#self.result_connect_threads.pop(id)		
+		self.notify_changes()
+		return False	
+
+	#def get_status_info 	
+					
+	def check_connect(self):
+		
+		self.connection=self.LliurexGoogleDriveManager.check_google_connection()
+
+	#def check_connect 	
+
+	def update_folders_info(self,profile,mountpoint):
+
+		self.folders_info={}
+		self.folders_info['profile']=profile
+		self.files=set()
+		
+		self.controlDirectory(mountpoint)
+		self.folders_info['files']=self.files
+		self.update_files.append(self.folders_info)	
+
+	#def update_folders_info	
+				
+
+	def notify_changes(self):
+
+
+		if self.init_files!=self.update_files:
+			toInfo=self.remove_local_changes()
+
+			for item in toInfo:
+				numFiles_up=0
+				numFiles_rm=0
+				numFiles_add=0
+				p=item['profile']
+				if 'files_changes' in item:
+					numFiles_up=len(item['files_changes'])
+				
+				if 'files_delete' in item:	
+					numFiles_rm=len(item['files_delete'])
+				
+				if 'files_add' in item:	
+					numFiles_add=len(item['files_add'])
+				
+				if numFiles_up>0 or numFiles_rm>0 or numFiles_add>0:
+					message1=_('Changes in last 15 minutes in ')+p.encode("utf-8")+':\n'
+					message_up=""
+					message_rm=""
+					message_add=""		
+					if numFiles_up>0:
+						message_up=_("-Files updated: ")
+						for i in self.notifications_list:
+							if i['profile']==p:
+								for element in item['files_changes']:
+									i['notifications'].append(element)
+						if numFiles_up==1:
+							for element in item['files_changes']:
+								file=os.path.basename(element.split(":__")[0])
+								file_split=os.path.splitext(file)
+								if file_split[1]==".desktop":
+									file=file_split[0]
+								message_up=message_up + file.encode("utf-8") +'\n'
+									
+						else:	
+							message_up= message_up + str(numFiles_up) + '\n'
+
+					if numFiles_add>0:
+						message_add=_("-Files added: ")
+						for i in self.notifications_list:
+							if i['profile']==p:
+								for element in item['files_add']:
+									i['notifications'].append(element)
+						if numFiles_add==1:
+							for element in item['files_add']:
+								file=os.path.basename(element.split(":__")[0])
+								file_split=os.path.splitext(file)
+								if file_split[1]==".desktop":
+									file=file_split[0]
+								message_add=message_add +file.encode("utf-8") +'\n'
+						else:
+								
+							message_add=message_add + str(numFiles_add) + '\n'
+
+					if numFiles_rm>0:
+						message_rm=_("-Files deleted: ")	
+						if numFiles_rm==1:
+							for element in item['files_delete']:
+								file=os.path.basename(element.split(":__")[0])	
+								file_split=os.path.splitext(file)
+								if file_split[1]==".desktop":
+									file=file_split[0]
+								message_rm=message_rm + file.encode("utf-8") +'\n'
+						else:		
+							message_rm=message_rm +str(numFiles_rm)
+
+					self.show_message(message1 + message_add + message_up + message_rm)
+
+		self.init_files=copy.copy(self.update_files)
+		self.local_changes={}
+
+	#def notify_changes
+	
+	def remove_local_changes(self):
+
+		changes=self.detect_folder_changes()
+
+		changes_toNotify=[]
+		
+		if len(changes)>0:
+
+			for item in changes:
+				tmp_changes=[]
+				tmp_deletes=[]
+				tmp_add=[]
+				to_info={}
+				to_info['profile']=item['profile']
+
+				if 'files_changes' in item:
+					#tmp_changes=item['files_changes']
+					tmp_changes=self.detect_previous_notifications(item)
+					toInfo_up=tmp_changes.copy()	
+				if 'files_deletes' in item:
+					tmp_deletes=item['files_deletes']	
+					toInfo_rm=tmp_deletes.copy()
+
+				if 'files_add' in item:
+					tmp_add=item['files_add']	
+					toInfo_add=tmp_add.copy()
+
+
+				if len(self.local_changes)>0:
+					if len(tmp_changes)>0:
+						for item in tmp_changes:
+							#file=item.keys()[0]
+							file=item.split(":__")[0]
+							data=item.split(":__")[1]
+							for i in self.local_changes:
+								if file==i:
+									data=datetime.datetime.strptime(data,'%Y-%m-%d %H:%M:%S')
+									if data<=self.local_changes[i]:
+										toInfo_up.remove(item)
+						to_info['files_changes']=toInfo_up				
+					if len(tmp_deletes)>0:
+						for item in tmp_deletes:
+							file=os.path.basename(item.split(":__")[0])
+							file=os.path.splitext(file)[0]
+							data=item.split(":__")[1]
+							for i in self.local_changes:
+								if file in i:
+									data=datetime.datetime.strptime(data,'%Y-%m-%d %H:%M:%S')
+									if data<=self.local_changes[i]:
+										toInfo_rm.remove(item)
+						to_info['files_delete']=toInfo_rm					
+
+					if len(tmp_add)>0:
+						for item in tmp_add:
+							file=item.split(":__")[0]
+							data=item.split(":__")[1]
+							for i in self.local_changes:
+								if file==i:
+									data=datetime.datetime.strptime(data,'%Y-%m-%d %H:%M:%S')
+									if data<=self.local_changes[i]:
+										toInfo_add.remove(item)	
+						to_info['files_add']=toInfo_add
+				else:
+					to_info['files_changes']=tmp_changes
+					to_info['files_delete']=tmp_deletes
+					to_info['files_add']=tmp_add		
+
+				changes_toNotify.append(to_info)
+
+		return changes_toNotify	
+
+	#def remove_local_changes
+
+
+	def detect_folder_changes(self):
+
+		changes=[]
+				
+		
+		for item in self.update_files:
+			info_changes={}
+			info_changes['profile']=item['profile']
+			final_files=item['files']
+
+			for item in self.init_files:
+				profile_init=item['profile']
+				original_files=item['files']
+				if len(original_files)>0:
+					if len(final_files)>0:
+						if info_changes['profile']==profile_init:
+							diff_changes=final_files.difference(original_files)
+							diff_deletes=original_files.difference(final_files)
+							
+							if len(diff_changes)>0:
+								changes.append(info_changes)
+
+								if len(diff_deletes)>0:	
+										tmp_del=diff_deletes.copy()
+										tmp_add=diff_changes.copy()
+										for item in diff_deletes:
+											file_d=item.split(":__")[0]
+											for element in diff_changes:
+												file_c=element.split(":__")[0]
+												if file_d == file_c:
+													tmp_del.remove(item)
+													tmp_add.remove(element)
+
+										if len(tmp_del)>0:
+											info_changes['files_deletes']=tmp_del
+
+										if len(tmp_add)>0:
+											info_changes['files_add']=tmp_add
+											tmp_up=diff_changes.difference(tmp_add)
+											info_changes['files_changes']=tmp_up
+										else:
+											info_changes['files_changes']=diff_changes	
+												
+								else:
+									info_changes['files_add']=diff_changes			
+							else:
+								if len(original_files)>len(final_files) and len(diff_deletes)>0:
+									info_changes['files_deletes']=diff_deletes
+									changes.append(info_changes)
+				
+							
+		return changes	
+
+	#def detect_folder_changes									
+	
+
+	def detect_previous_notifications(self,item):
+
+		changes=item['files_changes']
+		toInfo_up=changes.copy()
+		for element in self.notifications_list:
+			if item['profile']==element['profile']:
+				for f in changes:
+					file_changed=f.split(":__")[0]
+					data_changed=f.split(":__")[1]
+					data_changed=datetime.datetime.strptime(data_changed,'%Y-%m-%d %H:%M:%S')
+					for j in element['notifications']:
+						file_notified=j.split(":__")[0]
+						data_notified=j.split(":__")[1]
+						data_notified=datetime.datetime.strptime(data_notified,'%Y-%m-%d %H:%M:%S')
+						if file_changed==file_notified:
+							diff=(data_changed-data_notified).seconds
+							if int(diff)<6:
+								toInfo_up.remove(f)
+
+
+		return toInfo_up	
+
+	#def detect_previous_notifications						
+
+	def show_message(self,message):
+		notify2.init("llxgdrive")
+		n=notify2.Notification("Lliurex-GDrive",message,"gdrive")
+		n.show()
+		return
+
+	#def show_message 	
+				
+	
+	def cleanIndicatorLock(self):
+
+		if os.path.exists(self.lock_indicator):
+			os.remove(self.lock_indicator)
+
+	#def cleanIndicatorLock  		
+	
+	def quit(self,widget):
+
+		self.cleanIndicatorLock()
+		Gtk.main_quit()	
+
+	#def quit	
+
+	
+#class LliurexGdriveIndicator
+
+if __name__=="__main__":
+	
+	lliurexgdrive=LliurexGdriveIndicator("gdrive")
+	GObject.threads_init()
+	Gtk.main()
+	

@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<component type="desktop-application">
+<id>zero-lliurex-gdrive</id>
+<metadata_license>CC0-1.0</metadata_license>
+<name>zero-lliurex-gdrive</name>
+<name xml:lang="en">LliureX Google Drive</name>
+<name xml:lang="es">LliureX Google Drive</name>
+<name xml:lang="ca_ES.UTF-8@valencia">LliureX Google Drive</name>
+<name xml:lang="ca_ES">LliureX Google Drive</name>
+<name xml:lang="ca_ES@valencia">LliureX Google Drive</name>
+<summary>Config tool for lliurex-gdrive app</summary>
+<summary xml:lang="es">Herramienta de configuración para lliurex-gdrive</summary>
+<summary xml:lang="ca_ES.UTF-8@valencia">Eina de configuració per al lliurex-gdrive</summary>
+<summary xml:lang="ca_ES@valencia">Eina de configuració per al lliurex-gdrive</summary>
+<summary xml:lang="ca">Eina de configuració per al lliurex-gdrive</summary>
+<description>
+<p>Tool for configure the google drive app from lliurex. It lets the user set different mount and startup options</p>
+<p xml:lang="es">Herramientar para configurar la aplicación de google drive de lliurex. Permite configurar las diversas opciones de acceso e inicio de la aplicación</p>
+<p xml:lang="ca_ES.UTF-8@valencia">Eina per a configurar l'aplicació de google drive del Lliurex. Permet configurar les diverses opcions d'accès e inici de l'aplicació</p>
+<p xml:lang="ca_ES@valencia">Eina per a configurar l'aplicació de google drive del Lliurex. Permet configurar les diverses opcions d'accès e inici de l'aplicació</p>
+<p xml:lang="ca">Eina per a configurar l'aplicació de google drive del Lliurex. Permet configurar les diverses opcions d'accès e inici de l'aplicació</p>
+</description>
+<categories>
+<category>Network</category>
+<category>Zomando</category>
+<category>Lliurex</category>
+</categories>
+<icon type="stock">gdrive</icon>
+<provides><binary>lliurex-gdrive</binary></provides>
+<keywords>
+<keyword>lliurex-gdrive</keyword>
+<keyword>LliureX</keyword>
+<keyword>Google</keyword>
+<keyword>Drive</keyword>
+
+</keywords>
+<developer_name> </developer_name>
+</component>

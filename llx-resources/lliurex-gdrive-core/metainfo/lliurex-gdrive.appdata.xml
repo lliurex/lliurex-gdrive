@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<component type="desktop-application">
+<id>lliurex-gdrive</id>
+<metadata_license>CC0-1.0</metadata_license>
+<name>lliurex-gdrive</name>
+<name xml:lang="en">LliureX Google Drive</name>
+<name xml:lang="es">LliureX Google Drive</name>
+<name xml:lang="ca_ES.UTF-8@valencia">LliureX Google Drive</name>
+<name xml:lang="ca_ES">LliureX Google Drive</name>
+<name xml:lang="ca_ES@valencia">LliureX Google Drive</name>
+<summary>Client to sync Google Drive accounts</summary>
+<summary xml:lang="es">Cliente para sincronizar cuentas de Google Drive</summary>
+<summary xml:lang="ca_ES.UTF-8@valencia">Client per sincronitzar comptes de Google Drive</summary>
+<summary xml:lang="ca_ES">Client per sincronitzar comptes de Google Drive</summary>
+<summary xml:lang="ca_ES@valencia">Client per sincronitzar comptes de Google Drive</summary>
+<description>
+<p>Client to sync Google Drive accounts</p>
+<p xml:lang="es">Cliente para sincronizar cuentas de Google Drive. Permite acceder al contenido de Google Drive como si se tratase de una unidad de red cómodamente y desde el navegador de ficheros</p>
+<p xml:lang="ca_ES.UTF-8@valencia">Client per sincronitzar comptes de Google Drive. Permet l'accés al contingut de Google Drive com si es tractés d'una unitat de xarxa comodament i desde el propi navegador de fitxers</p>
+<p xml:lang="ca_ES@valencia">Client per sincronitzar comptes de Google Drive. Permet l'accés al contingut de Google Drive com si es tractés d'una unitat de xarxa comodament i desde el propi navegador de fitxers</p>
+<p xml:lang="ca">Client per sincronitzar comptes de Google Drive. Permet l'accés al contingut de Google Drive com si es tractés d'una unitat de xarxa comodament i desde el propi navegador de fitxers</p>
+</description>
+<categories>
+<category>Network</category>
+</categories>
+<icon type="stock">gdrive</icon>
+<provides><binary>lliurex-gdrive</binary></provides>
+<keywords>
+<keyword>lliurex-gdrive</keyword>
+<keyword>LliureX</keyword>
+<keyword>Google</keyword>
+<keyword>Drive</keyword>
+
+</keywords>
+<developer_name> </developer_name>
+</component>
