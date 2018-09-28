@@ -540,8 +540,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="exit_button">
-                <property name="label">gtk-close</property>
+              <object class="GtkButton" id="help_button">
+                <property name="label">gtk-help</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>

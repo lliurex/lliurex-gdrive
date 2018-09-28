@@ -16,6 +16,8 @@ DEBUG=False
 GDRIVE_CONFIG_DIR=os.path.expanduser("~/.gdfuse/")
 LLIUREX_CONFIG_FILE_64='/usr/share/lliurex-gdrive/llx-data/config_64'
 LLIUREX_CONFIG_FILE_32='/usr/share/lliurex-gdrive/llx-data/config_32'
+FIREFOX_BROWSER_BIN='/usr/share/lliurex-gdrive/llx-data/firefox-browser'
+CHROME_BROWSER_BIN='/usr/share/lliurex-gdrive/llx-data/chrome-browser'
 	
 
 
@@ -28,11 +30,15 @@ class LliurexGoogleDriveManager(object):
 		self.config_dir=os.path.expanduser("~/.config/lliurex-google-drive-profiles/")
 		self.config_file=self.config_dir+"configProfiles"
 		
+		self.bin_dir=os.path.expanduser("~/.local/bin")
+		self.chromium_path=self.bin_dir+"/chromium-browser"
 		self.mount_cmd="google-drive-ocamlfuse -label %s %s"
 		self.clean_cache="google-drive-ocamlfuse -cc -label %s"
 
 		self.gdrive_path=[]
 		self.read_gdrive_folder=False
+		self.browser_changed=False
+
 
 		self.read_conf()
 		
@@ -424,8 +430,9 @@ class LliurexGoogleDriveManager(object):
 					shutil.copy(LLIUREX_CONFIG_FILE_64,path )
 				else:
 					shutil.copy(LLIUREX_CONFIG_FILE_32,path )
-						
-		
+			
+			self.remove_chromium_tmpbin()
+
 		return True
 				
 			
@@ -769,6 +776,83 @@ class LliurexGoogleDriveManager(object):
 		new_config.close()
 
 	#def change_config_file	
+
+	def is_chromium_favourite_browser(self):
+
+		result=False
+
+		if os.system("xdg-mime query default x-scheme-handler/https | grep chromium 1>/dev/null")==0:
+			result=True			
+			msg_log="Detected chromium as favourite browser. Unable to add profile"
+			self.log(msg_log)			
+
+		return result
+
+	#def is_chromium_favourite_browser	
+
+	
+	def can_change_browser(self):
+
+		result=False
+
+		if not os.path.exists(self.chromium_path):
+			self.installed_browser_detect()
+			if len(self.installed_browsers)>0:
+				result=True
+
+		return result		
+
+	#def can_change_browser	
+
+	def installed_browser_detect(self):	
+
+		self.installed_browsers=[]
+
+		if os.system('dpkg -l firefox | grep firefox | grep "^i[i]" 1>/dev/null')==0:
+			self.installed_browsers.append("firefox")
+
+		if os.system('dpkg -l google-chrome-stable | grep google-chrome-stable | grep "^i[i]" 1>/dev/null')==0:
+			self.installed_browsers.append("google-chrome-stable")
+
+
+	#def installed_browser_detec		
+
+
+	def change_default_browser(self):
+	
+
+		if not os.path.exists(self.bin_dir):
+			os.makedirs(self.bin_dir)		
+
+	
+		if "firefox" in self.installed_browsers:
+			shutil.copy(FIREFOX_BROWSER_BIN,self.chromium_path)
+		else:
+			if "google-chrome-stable" in self.installed_browsers:
+				shutil.copy(CHROME_BROWSER_BIN,self.chromium_path)
+
+		self.browser_changed=True
+
+		try:
+			cmd='chmod +x '+self.chromium_path
+			os.system(cmd)
+		except:
+			pass
+
+	#def change_default_browser			
+
+
+	def remove_chromium_tmpbin(self):
+
+
+		if self.browser_changed:
+			if os.path.exists(self.chromium_path):
+				os.remove(self.chromium_path)
+				self.browser_changed=False
+
+		return
+		
+	#def remove_chromium_tmpbin			
 
 	def log(self,msg):
 		
