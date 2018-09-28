@@ -1,3 +1,21 @@
+lliurex-gdrive (0.3.24) xenial; urgency=medium
+
+  * Added access to the LliureX wiki article
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 19 Jul 2018 13:13:37 +0200
+
+lliurex-gdrive (0.3.23) xenial; urgency=medium
+
+  * Fixed function to remove tmp bin browser
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 31 May 2018 13:19:47 +0200
+
+lliurex-gdrive (0.3.22) xenial; urgency=medium
+
+  * Added check: Chromium as default browser
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 31 May 2018 12:59:06 +0200
+
 lliurex-gdrive (0.3.21) xenial; urgency=medium
 
   * Updated categorization in zero-center

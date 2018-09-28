@@ -29,7 +29,10 @@ class LliurexGdriveAutostart:
 		self.lock_gui=os.path.expanduser(LOCK_GUI)
 		self.lock_indicator=os.path.expanduser(LOCK_INDICATOR)
 
-		self.launch_endsession()
+		try:
+			self.launch_endsession()
+		except:
+			pass	
 		self.mount_drives()
 		self.launch_indicator()
 		

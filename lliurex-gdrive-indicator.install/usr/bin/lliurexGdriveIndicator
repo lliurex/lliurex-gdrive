@@ -49,6 +49,7 @@ SP7=RSRC+"rsrc/sp7.png"
 SP8=RSRC+"rsrc/sp8.png"
 
 TIME_CHECK_STATUS=900000
+DELTA_DATA=20
 
 class LliurexGdriveIndicator:
 
@@ -142,7 +143,7 @@ class LliurexGdriveIndicator:
 		
 		
 		wm=WatchManager()
-		mask= pyinotify.IN_CLOSE_WRITE
+		mask= pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO
 		      
 			
 		class Process_handler(ProcessEvent):
@@ -150,6 +151,8 @@ class LliurexGdriveIndicator:
 			def __init__(self,main):
 				
 				self.main=main
+
+			#def __init__	
 			
 				
 			def process_IN_CLOSE_WRITE(self,event):
@@ -229,34 +232,38 @@ class LliurexGdriveIndicator:
 										wdd=wm.add_watch(tmp_mountpoint,mask,rec=True)
 									
 					else:	
-						time.sleep(2)
-						t=join(event.path,event.name)
-						if isfile(t):
-							
-							'''
-							for item in self.main.profiles_info:
-								tmp_mount=self.main.profiles_info[item]["mountpoint"]
-								
-								if event.path in tmp_mount:
-									cmd="google-drive-ocamlfuse -cc -label %s"%item
-									os.system(cmd)
-							'''		
-											
-							try:
-								
-								state=os.stat(t)
-								
-							except Exception as e:
-								print str(e)
-								t=t.split('trashinfo')
-								t=t[0]+'trashinfo'
-								state=os.stat(t)
-								
-							t=t.decode("utf-8")			
-							access=datetime.datetime.fromtimestamp(state.st_mtime)
-							self.main.local_changes[t]=access
-										
-		
+						self.register_change(event)
+
+			#def process_IN_CLOSE_WRITE			
+
+			def process_IN_MOVED_TO(self,event):
+
+				self.register_change(event)
+
+			#def process_IN_MOVED_TO	
+				
+
+			def register_change(self,event):
+			
+				t=join(event.path,event.name)
+				if isfile(t):
+					
+					try:
+						state=os.stat(t)
+						
+					except Exception as e:
+						print str(e)
+						t=t.split('trashinfo')
+						t=t[0]+'trashinfo'
+						state=os.stat(t)
+						
+
+					t=t.decode("utf-8")	
+					access=datetime.datetime.fromtimestamp(state.st_mtime)
+					self.main.local_changes[t]=access
+
+			#def register_change
+
 		notifier=Notifier(wm,Process_handler(self))
 		wdd=wm.add_watch(LliurexGdriveIndicator.WATCH_DIR,mask,rec=True)
 		
@@ -264,7 +271,8 @@ class LliurexGdriveIndicator:
 			path=os.path.expanduser(self.profiles_info[profile]["mountpoint"])
 			wdd=wm.add_watch(path,mask,rec=True)
 
-		
+		trasfolder=os.path.expanduser("~/.local/share/Trash/files")
+		wdd=wm.add_watch(trasfolder,mask,rec=False)
 		while True:
 			try:
 				
@@ -381,6 +389,19 @@ class LliurexGdriveIndicator:
 		item.set_image(img)
 		item.set_always_show_image(True)
 		item.connect("activate",self.open_gui)
+		item.profile=""
+		item.size=False
+		item.status=False
+		self.menu.append(item)
+
+		item=Gtk.ImageMenuItem()
+		label_item=_("Help")
+		item.set_label(label_item)
+		img=Gtk.Image()
+		img.set_from_stock(Gtk.STOCK_HELP,Gtk.IconSize.MENU)
+		item.set_image(img)
+		item.set_always_show_image(True)
+		item.connect("activate",self.help)
 		item.profile=""
 		item.size=False
 		item.status=False
@@ -820,10 +841,17 @@ class LliurexGdriveIndicator:
 							file=item.split(":__")[0]
 							data=item.split(":__")[1]
 							for i in self.local_changes:
-								if file==i:
+								if file ==i:
 									data=datetime.datetime.strptime(data,'%Y-%m-%d %H:%M:%S')
 									if data<=self.local_changes[i]:
 										toInfo_up.remove(item)
+										break
+									else:
+										dif_data=(data-self.local_changes[i]).seconds
+										if int(dif_data)<DELTA_DATA:
+											toInfo_up.remove(item)
+											break
+											
 						to_info['files_changes']=toInfo_up				
 					if len(tmp_deletes)>0:
 						for item in tmp_deletes:
@@ -835,6 +863,12 @@ class LliurexGdriveIndicator:
 									data=datetime.datetime.strptime(data,'%Y-%m-%d %H:%M:%S')
 									if data<=self.local_changes[i]:
 										toInfo_rm.remove(item)
+										break
+									else:
+										dif_data=(data-self.local_changes[i]).seconds
+										if int(dif_data)<DELTA_DATA:
+											toInfo_rm.remove(item)	
+											break
 						to_info['files_delete']=toInfo_rm					
 
 					if len(tmp_add)>0:
@@ -846,6 +880,12 @@ class LliurexGdriveIndicator:
 									data=datetime.datetime.strptime(data,'%Y-%m-%d %H:%M:%S')
 									if data<=self.local_changes[i]:
 										toInfo_add.remove(item)	
+										break
+									else:
+										dif_data=(data-self.local_changes[i]).seconds
+										if int(dif_data)<DELTA_DATA:
+											toInfo_add.remove(item)	
+											break	
 						to_info['files_add']=toInfo_add
 				else:
 					to_info['files_changes']=tmp_changes
@@ -877,10 +917,8 @@ class LliurexGdriveIndicator:
 						if info_changes['profile']==profile_init:
 							diff_changes=final_files.difference(original_files)
 							diff_deletes=original_files.difference(final_files)
-							
 							if len(diff_changes)>0:
 								changes.append(info_changes)
-
 								if len(diff_deletes)>0:	
 										tmp_del=diff_deletes.copy()
 										tmp_add=diff_changes.copy()
@@ -891,7 +929,13 @@ class LliurexGdriveIndicator:
 												if file_d == file_c:
 													tmp_del.remove(item)
 													tmp_add.remove(element)
+													break
+												else:
+													short_file_d=os.path.basename(file_d)
 
+													if short_file_d in file_c:
+														tmp_del.remove(item)	
+														break
 										if len(tmp_del)>0:
 											info_changes['files_deletes']=tmp_del
 
@@ -961,6 +1005,19 @@ class LliurexGdriveIndicator:
 		Gtk.main_quit()	
 
 	#def quit	
+
+	def help(self,widget):
+
+		lang=os.environ["LANG"]
+
+		if 'ca_ES' in lang:
+			cmd='xdg-open http://wiki.lliurex.net/tiki-index.php?page=LliureX%2BGDrive_va'
+		else:
+			cmd='xdg-open http://wiki.lliurex.net/tiki-index.php?page=LliureX+Gdrive'
+
+		os.system(cmd)
+
+	#def help_clicked
 
 	
 #class LliurexGdriveIndicator

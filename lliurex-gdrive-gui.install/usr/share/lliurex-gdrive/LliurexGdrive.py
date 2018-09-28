@@ -49,6 +49,8 @@ class LliurexGdrive:
 			dialog.format_secondary_text(_("Lliurex GDrive is now running."))
 			dialog.run()
 			sys.exit(1)
+
+	#def islgd_running		
 	
 
 	def createLockToken(self):
@@ -70,7 +72,7 @@ class LliurexGdrive:
 		self.main_window=builder.get_object("main_window")
 		self.main_window.set_title("Lliurex GDrive")
 		self.main_box=builder.get_object("main_box")
-		self.exit_button=builder.get_object("exit_button")
+		self.help_button=builder.get_object("help_button")
 		self.check_window=builder.get_object("check_window")
 		self.check_pbar=builder.get_object("check_pbar")
 		self.check_plabel=builder.get_object("check_plabel")
@@ -105,6 +107,7 @@ class LliurexGdrive:
 				
 		self.profile_box.load_info(self.load_profiles)
 
+	#def load_info	
 		
 	def set_css_info(self):
 		
@@ -117,12 +120,12 @@ class LliurexGdrive:
 		self.indicator_label.set_name("OPTION_LABEL")
 		self.check_plabel.set_name("MSG_LABEL")
 
-				
+	#def remove_chromium_tmpbin			
 			
 	def connect_signals(self):
 		
 		self.main_window.connect("destroy",self.quit)
-		self.exit_button.connect("clicked",self.quit)
+		self.help_button.connect("clicked",self.help_clicked)
 	
 		
 	#def connect_signals
@@ -148,6 +151,7 @@ class LliurexGdrive:
 				f=open(self.disable_indicator,'w')
 				f.close
 
+	#def config_indicator			
 
 	def cleanLockToken(self):
 
@@ -164,8 +168,26 @@ class LliurexGdrive:
 		if self.show_indicator:
 			self.launch_indicator()
 
+		self.core.LliurexGoogleDriveManager.remove_chromium_tmpbin()
 		self.cleanLockToken()
 		Gtk.main_quit()	
+	
+	#def quit
+
+
+	def help_clicked(self,widget):
+
+		lang=os.environ["LANG"]
+
+		if 'ca_ES' in lang:
+			cmd='xdg-open http://wiki.lliurex.net/tiki-index.php?page=LliureX%2BGDrive_va'
+		else:
+			cmd='xdg-open http://wiki.lliurex.net/tiki-index.php?page=LliureX+Gdrive'
+
+		os.system(cmd)
+
+	#def help_clicked
+		
 	
 	def start_gui(self):
 		

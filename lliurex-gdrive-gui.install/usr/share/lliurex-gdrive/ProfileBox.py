@@ -299,11 +299,35 @@ class ProfileBox(Gtk.VBox):
 	def add_new_profile_button_clicked(self,widget):
 
 		self.edition=False
-		self.core.lgd.check_plabel.set_text(_("Checking connection to google..."))
-		self.core.lgd.check_window.show()
-		self.init_threads()
-		self.check_connection_t.start()
-		GLib.timeout_add(100,self.pulsate_add_connection)
+		self.msg_label.set_text("")
+		is_chromium_favourite=self.core.LliurexGoogleDriveManager.is_chromium_favourite_browser()
+		changed_browser=True
+
+		if is_chromium_favourite:
+			can_change=self.core.LliurexGoogleDriveManager.can_change_browser()
+			if can_change:
+				dialog = Gtk.MessageDialog(None,0,Gtk.MessageType.WARNING, Gtk.ButtonsType.YES_NO, "Lliurex GDrive")
+				dialog.format_secondary_text(_("To add a profile it is necessary to change Chromium as default browser by another (Firefox or Chrome).\nThe change will be made automatically. Once the profile is added Chromium it will be the favorite browser again.\nDo you wish to continue?"))
+				response=dialog.run()
+				dialog.destroy()
+				if response==Gtk.ResponseType.YES:
+					self.core.LliurexGoogleDriveManager.change_default_browser()
+				else:
+					changed_browser=False
+			else:
+				changed_browser=False		
+
+		if changed_browser:				
+			self.core.lgd.check_plabel.set_text(_("Checking connection to google..."))
+			self.core.lgd.check_window.show()
+			self.init_threads()
+			self.check_connection_t.start()
+			GLib.timeout_add(100,self.pulsate_add_connection)
+
+		else:	
+			msg_error=self.get_msg(21)
+			self.msg_label.set_name("MSG_ERROR_LABEL")
+			self.msg_label.set_text(msg_error)
 
 	#def add_new_profile_button_clicked	
 	
@@ -333,7 +357,8 @@ class ProfileBox(Gtk.VBox):
 				self.init_profile_dialog_button()
 				self.new_profile_window.show()
 				
-			else:		
+			else:
+				self.core.LliurexGoogleDriveManager.remove_chromium_tmpbin()		
 				msg_error=self.get_msg(8)
 				self.msg_label.set_name("MSG_ERROR_LABEL")
 				self.msg_label.set_text(msg_error)		
@@ -672,6 +697,8 @@ class ProfileBox(Gtk.VBox):
 	 		self.profile_msg.set_text(_("Validating entered data..."))
 	 		GLib.timeout_add(100,self.pulsate_check_form)
 
+	#def accept_add_profile_clicked		
+
 
 	def pulsate_check_form(self):
 
@@ -720,6 +747,8 @@ class ProfileBox(Gtk.VBox):
 			if not self.check_form_t.done:
 				return True		
 
+	#def check_form			
+
 	def check_form(self):			
 
 		self.check_form_result=self.core.LliurexGoogleDriveManager.check_profile_info(self.new_profile,self.new_mountpoint,self.edition,self.new_root_folder,self.new_gdrive_folder)
@@ -727,7 +756,7 @@ class ProfileBox(Gtk.VBox):
 		#self.profile_msg.show()
 
 	
-	#def accept_add_profile_clicked	
+	#def check_form	
 
 	def check_mountpoint_folder(self,widget):
 
@@ -899,7 +928,10 @@ class ProfileBox(Gtk.VBox):
 			msg_text=_("Error: Synced Gdrive folder no longer exists")
 		
 		elif code==20:
-			msg_text=_("Error: No folders found in Gdrive profile. You must disable the option")	
+			msg_text=_("Error: No folders found in Gdrive profile. You must disable the option")
+
+		elif code==21:
+			msg_text=_("Error: To add a profile it is required that Chromium is not the default browser")		
 
 				
 		return msg_text		
@@ -914,6 +946,7 @@ class ProfileBox(Gtk.VBox):
 			for child in parent.children(recursive=True):
 				child.kill()
 				self.create_profile_t.terminate()
+				self.core.LliurexGoogleDriveManager.remove_chromium_tmpbin()		
 				self.profile_msg.set_name("MSG_ERROR_LABEL")
 				self.profile_msg.set_text(_("Error getting authorization"))
 
@@ -979,10 +1012,11 @@ class ProfileBox(Gtk.VBox):
 
 	def cancel_add_profile_clicked(self,widget):
 		
+		self.core.LliurexGoogleDriveManager.remove_chromium_tmpbin()		
 		self.new_profile_window.hide()
-
 	
 	#def cancel_add_profile_clicked
+
 	
 	def root_folder_clicked(self,widget,event):
 
@@ -1000,8 +1034,6 @@ class ProfileBox(Gtk.VBox):
 
 	#def root_folder_clicked		
 
-
-	#def pulsate_read_mountpoint			
 
 	def init_read_mountpoint_dialog(self):
 
@@ -1060,7 +1092,7 @@ class ProfileBox(Gtk.VBox):
 			if not self.read_mountpoint_t.done:
 				return True
 
-	
+	#def pulsate_read_mountpoint	
 
 	def read_mountpoint(self):
 
