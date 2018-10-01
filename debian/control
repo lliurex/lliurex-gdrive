@@ -2,13 +2,13 @@ Source: lliurex-gdrive
 Section: web
 Priority: optional
 Maintainer: LliureX Team <lliurex@gva.es>
-Build-Depends: debhelper (>=9),
+Build-Depends: debhelper (>=10),
                llxsrchelper, 
                dh-python,
                python-all,
                python-setuptools,
 	       python3-poinstaller
-Standards-Version: 3.9.6
+Standards-Version: 4.1.2
 Homepage: http://lliurex.net
 X-Python-Version: >= 2.6
 
