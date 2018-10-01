@@ -1,31 +1,31 @@
 
 	GtkLabel {
-		font: Roboto;
+		font: 11pt Roboto;
 	}
 	
 	#OPTION_LABEL {
-		font: Roboto Light;
+		font: 11pt Roboto Light;
 
 	}
 
 	#MSG_LABEL {
 
 		color: #3366cc;
-		font: Roboto Bold 11;
+		font: 11pt Roboto Bold;
 			
 	}	
 
 	#GDRIVE_FOLDER {
 		
 		color: #3366cc;
-		font: Roboto 11;
+		font: 11pt Roboto;
 
 	}
 
 	#MSG_ERROR_LABEL {
 
 		color: #CC0000;
-		font: Roboto Bold 11; 
+		font: 11pt Roboto Bold; 
 	}
 
 	#OPTION_BUTTON {
