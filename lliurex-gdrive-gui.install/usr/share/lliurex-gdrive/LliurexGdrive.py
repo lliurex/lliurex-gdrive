@@ -72,19 +72,21 @@ class LliurexGdrive:
 		self.main_window=builder.get_object("main_window")
 		self.main_window.set_title("Lliurex GDrive")
 		self.main_box=builder.get_object("main_box")
-		self.help_button=builder.get_object("help_button")
+		#self.help_button=builder.get_object("help_button")
 		self.check_window=builder.get_object("check_window")
 		self.check_pbar=builder.get_object("check_pbar")
 		self.check_plabel=builder.get_object("check_plabel")
 		self.check_window.set_transient_for(self.main_window)
 
 
-		self.indicator_label=builder.get_object("indicator_label")
-		self.indicator_switch=builder.get_object("indicator_switch")
+		#self.indicator_label=builder.get_object("indicator_label")
+		#self.indicator_switch=builder.get_object("indicator_switch")
+		'''
 		if os.path.exists(self.disable_indicator):
-			self.indicator_switch.set_active(False)
-				
-
+			self.core.profile_box.popover.indicator_label(_("Show menu indicator"))
+			#self.indicator_switch.set_active(False)
+					
+		'''
 		self.profile_box=self.core.profile_box
 		self.main_box.add(self.profile_box)
 		
@@ -117,7 +119,7 @@ class LliurexGdrive:
 		self.style_provider.load_from_file(f)
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),self.style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 		self.main_window.set_name("WINDOW")
-		self.indicator_label.set_name("OPTION_LABEL")
+		#self.indicator_label.set_name("OPTION_LABEL")
 		self.check_plabel.set_name("MSG_LABEL")
 
 	#def remove_chromium_tmpbin			
@@ -125,7 +127,7 @@ class LliurexGdrive:
 	def connect_signals(self):
 		
 		self.main_window.connect("destroy",self.quit)
-		self.help_button.connect("clicked",self.help_clicked)
+		#self.help_button.connect("clicked",self.help_clicked)
 	
 		
 	#def connect_signals
@@ -145,9 +147,11 @@ class LliurexGdrive:
 
 		if self.show_indicator:
 			if os.path.exists(self.disable_indicator):
+				print("ACTIVANDO")
 				os.remove(self.disable_indicator)	
 		else:
 			if not os.path.exists(self.disable_indicator):
+				print("DESACTIVANDO")
 				f=open(self.disable_indicator,'w')
 				f.close
 
@@ -162,10 +166,11 @@ class LliurexGdrive:
 
 	def quit(self,widget):
 
-		self.show_indicator=self.indicator_switch.get_state()
-		self.config_indicator()
+		#self.show_indicator=self.indicator_switch.get_state()
+		#self.config_indicator()
 
-		if self.show_indicator:
+		#if self.show_indicator:
+		if not os.path.exists(self.disable_indicator):
 			self.launch_indicator()
 
 		self.core.LliurexGoogleDriveManager.remove_chromium_tmpbin()
@@ -174,7 +179,7 @@ class LliurexGdrive:
 	
 	#def quit
 
-
+	'''
 	def help_clicked(self,widget):
 
 		lang=os.environ["LANG"]
@@ -188,7 +193,7 @@ class LliurexGdrive:
 
 	#def help_clicked
 		
-	
+	'''
 	def start_gui(self):
 		
 		GObject.threads_init()

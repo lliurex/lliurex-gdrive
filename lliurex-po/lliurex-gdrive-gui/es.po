@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-19 12:57+0200\n"
-"PO-Revision-Date: 2018-07-19 12:57+0200\n"
+"POT-Creation-Date: 2018-11-16 12:51+0100\n"
+"PO-Revision-Date: 2018-11-16 12:52+0100\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "Language: es\n"
@@ -17,27 +17,37 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:238
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:82
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1268
+msgid "Hide menu indicator at login"
+msgstr "Ocultar indicador de menú al iniciar sesión"
+
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:84
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1263
+msgid "Show menu indicator at login"
+msgstr "Mostar indicador de menú al iniciar sesión"
+
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:273
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:258
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:293
 msgid "Create new profile"
 msgstr "Crear nuevo perfil"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:269
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:606
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:304
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:651
 msgid "Edit profile"
 msgstr "Editar perfil"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:294
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:329
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:415
 msgid "Close"
 msgstr "Cerrar"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:310
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:345
 msgid ""
 "To add a profile it is necessary to change Chromium as default browser by "
 "another (Firefox or Chrome).\n"
@@ -51,133 +61,137 @@ msgstr ""
 "Chromium volverá otra vez a ser el navegador favorito.\n"
 "¿Desea continuar?"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:321
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:490
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:356
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:528
 msgid "Checking connection to google..."
 msgstr "Comprobando conexión con Google..."
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:374
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:411
 msgid "Do you want delete the profile?"
 msgstr "¿Deseas borrar el perfil?"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:392
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:436
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:734
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:429
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:473
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:804
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:535
 msgid "Applying changes..."
 msgstr "Aplicando cambios..."
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:598
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:637
+msgid "Manage profile"
+msgstr "Gestionar perfil"
+
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:664
 msgid "Delete profile"
 msgstr "Borrar perfil"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:648
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:718
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:644
 msgid "Without connection. Clicked to update"
 msgstr "Sin conexión. Pulse para actualizar"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:652
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:722
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:649
 msgid "Mounted. Clicked to dismount now"
 msgstr "Montado. Pulse para desmontar ahora"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:656
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:726
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:654
 msgid "Dismounted. Clicked to mount now"
 msgstr "Desmontado. Pulse para montar ahora"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:697
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:767
 msgid "Validating entered data..."
 msgstr "Validando la información introducida..."
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:725
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:795
 msgid "Connecting with google to get account access..."
 msgstr "Conectando con google para obtener acceso a la cuenta..."
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:834
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:904
 msgid "Creating profile... "
 msgstr "Creando perfil..."
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:843
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:913
 msgid "Profile created successfully"
 msgstr "Perfil creado correctamente"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:871
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:941
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:556
 msgid "Changes applied successfully"
 msgstr "Cambios aplicados correctamente"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:874
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:944
 msgid "Error: Unable to create mount point"
 msgstr "Error: Imposible crear el punto de montaje"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:877
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:947
 msgid "Error: Unable to mount mount point"
 msgstr "Error: Imposible montar el punto de montaje"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:880
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:950
 msgid "Error: Mount point is not owned by user"
 msgstr "Error: Punto de montaje no pertenece al usurio"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:883
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:953
 msgid "Error: No mount point indicated"
 msgstr "Error: No se ha indicado un punto de montaje"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:886
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:956
 msgid "Error: Profile is not authorized to Google Drive"
 msgstr "Error: El perfil no tiene autorización para Google Drive"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:889
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:959
 msgid "Error: Unknow profile"
 msgstr "Error: Perfil desconocido"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:892
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:962
 msgid "Error: Unable to dismount mount point"
 msgstr "Error: Imposible desmontar el punto de montaje"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:895
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:965
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:544
 msgid "Error: Unable to connect with google"
 msgstr "Error: Imposible conectar con Google"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:898
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:968
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:554
 msgid "Status updated. Now you can change it"
 msgstr "Estado actualizado. Ahora puedes cambiarlo"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:901
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:971
 msgid "You must indicate a profile"
 msgstr "Debes indicar un perfil"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:904
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:974
 msgid "Profile can not contain blanks"
 msgstr "El perfil no puede contener espacios en blanco"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:907
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:977
 msgid "Profile already exists"
 msgstr "El perfil ya existe"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:910
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:980
 msgid "Mount point already used by another profile"
 msgstr "El punto de montaje ya esta siendo usado por otro perfil"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:913
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:983
 msgid "The mount point must be an empty folder"
 msgstr "El punto de montaje debe ser una carpeta vacía"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:916
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:986
 msgid "Mount point is not owned by user"
 msgstr "El punto de montaje no pertenece al usuario"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:919
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:989
 msgid "Path of mount point can not contain blanks"
 msgstr "La ruta del punto de montaje no puede contener espacios en blanco"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:922
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:992
 msgid "Error: You must specify a GDrive folder or disable the option"
 msgstr "Error: Debe especificar la carpeta de Gdrive o deshabilitar la opción"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:925
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:995
 msgid ""
 "Error: Unable to mount mount point. The synced GDrive folder maybe not be "
 "correct"
@@ -185,17 +199,17 @@ msgstr ""
 "Error: Imposible montar el punto de montaje. Puede que la carpeta de Gdrive "
 "sincronizada no sea correcta"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:928
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:998
 msgid "Error: Synced Gdrive folder no longer exists"
 msgstr "Error: La carpeta sincronizada de Gdrive no existe"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:931
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1001
 msgid "Error: No folders found in Gdrive profile. You must disable the option"
 msgstr ""
 "Error: No se han detectado carpetas en el perfil de Gdrive. Debe "
 "deshabilitar la opción"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:934
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1004
 msgid ""
 "Error: To add a profile it is required that Chromium is not the default "
 "browser"
@@ -203,15 +217,31 @@ msgstr ""
 "Error: Para añadir un perfil es necesario que Chromium no sea el navegador "
 "por defecto"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:951
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1007
+msgid ""
+"The menu indicator has been disabled. It will hide automatically when you "
+"log in"
+msgstr ""
+"El indicador de menú ha sido desactivado. Se ocultará automáticamente al "
+"iniciar sesión"
+
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1009
+msgid ""
+"The menu indicator has been enabled. It will be displayed automatically when "
+"you close the application"
+msgstr ""
+"El indicador de menú ha sido activado. Se mostrará automáticamente al cerrar "
+"la aplicación"
+
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1025
 msgid "Error getting authorization"
 msgstr "Error obteniendo autorización"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1046
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1122
 msgid "Getting folders from Google Drive profile ..."
 msgstr "Obteniendo carpetas del perfil de Google Drive..."
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1084
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/ProfileBox.py:1160
 msgid "No folders detected on google drive profile"
 msgstr "No se han detectado carpetas en el perfil de Google Drive"
 
@@ -223,41 +253,46 @@ msgstr "Lliurex Gdrive ya esta ejecutando"
 msgid "Profile:"
 msgstr "Perfil:"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:95
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:108
 msgid "E-mail:"
 msgstr "E-mail:"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:110
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:138
 msgid "Mount point:"
 msgstr "Punto de montaje:"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:125
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:171
 msgid "Mount at login:"
 msgstr "Montar al inicio de sesión:"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:198
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:211
 msgid "Sync specific Gdrive folder:"
 msgstr "Sincronizar carpeta específica de Gdrive:"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:229
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:249
 msgid "Synced Gdrive folder:"
 msgstr "Carpeta de Gdrive sincronizada:"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:394
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:284
+msgid "Edit synced Gdrive folder:"
+msgstr "Editar carpeta de Gdrive sincronizada"
+
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:428
 msgid "Select folder of GDrive to sync"
 msgstr "Selecciona la carpeta de Gdrive a sincronizar"
 
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:521
-msgid "Show indicator in menu bar at login:"
-msgstr "Mostar indicador en la barra de menú al inicio de sesión:"
-
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:605
-msgid "SYNC PROFILES"
-msgstr "PERFILES SINCRONIZADOS"
-
-#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:675
-msgid "Add profile"
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:611
+msgid "Add new profile"
 msgstr "Añadir perfil"
+
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:625
+msgid "Global management"
+msgstr "Gestión global"
+
+#: ../lliurex-gdrive-gui.install/usr/share/lliurex-gdrive/rsrc/lliurex-gdrive.ui:638
+#: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:398
+msgid "Help"
+msgstr "Ayuda"
 
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:342
 msgid "Open folder"
@@ -276,10 +311,6 @@ msgstr ""
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:385
 msgid "Open Lliurex GDrive"
 msgstr "Abrir Lliurex GDrive"
-
-#: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:398
-msgid "Help"
-msgstr "Ayuda"
 
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:548
 msgid "dismount"
@@ -326,6 +357,19 @@ msgstr "-Archivos nuevos: "
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:791
 msgid "-Files deleted: "
 msgstr "-Archivos eliminados: "
+
+#, fuzzy
+#~| msgid "Profile:"
+#~ msgid "Profile Options"
+#~ msgstr "Perfil:"
+
+#, fuzzy
+#~| msgid "Add profile"
+#~ msgid "add_profile"
+#~ msgstr "Añadir perfil"
+
+#~ msgid "SYNC PROFILES"
+#~ msgstr "PERFILES SINCRONIZADOS"
 
 #~ msgid "Error: unable to mount mount point"
 #~ msgstr "Error: imposible montar el punto de montaje"
