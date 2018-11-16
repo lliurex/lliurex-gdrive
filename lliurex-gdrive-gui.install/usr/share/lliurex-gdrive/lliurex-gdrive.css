@@ -1,10 +1,22 @@
 
+
+/*@define-color arc-blue #3a87e2;*/
+@define-color arc-blue #0062f5;
+@define-color arc-blue-light #4accf5;
+@define-color arc-black #2d323d;
+@define-color arc-red #000000;
+@define-color arc-blue-hover #629de2;
+@define-color arc-blue-active #3aa3e2;
+@define-color default-grey #666666;
+
+
 	GtkLabel {
 		font: 11pt Roboto;
 	}
 	
 	#OPTION_LABEL {
-		font: 11pt Roboto Light;
+		font: 10pt Quattrocento Sans Bold;
+		color: #080808;
 
 	}
 
@@ -178,3 +190,56 @@
 				color-stop(1, rgba(255,255,255,1))
 			);
 	}
+
+	#POPOVER_OFF {
+		color: #707070;
+
+	}	
+
+	#POPOVER_ON{
+
+		color: #3366cc;
+
+	}
+
+	#POPOVER_SEPARATOR{
+
+		color: #b3b3b3;
+
+	}
+
+
+#CUSTOM-ENTRY
+{
+		color: @default-grey;
+		border: none;
+		/*border-radius: 5px;*/
+		/*background-color: @arc-blue;*/
+		border-bottom: 1px solid #aaaaaa;
+		padding: 4px;
+		/*background: #eeeeee;*/
+		
+		/*border-bottom: 2px solid transparent;*/
+	
+}
+
+#CUSTOM-ENTRY:focus
+{
+		color: @arc-blue;
+		border-bottom: 1px solid @arc-blue-light;
+		/*border-bottom: 2px solid rgba(0,0,0,0);*/
+		/*background-color: transparent;*/
+		
+	
+}
+#CUSTOM-ENTRY:selected
+{
+	color: white;
+}
+
+#CUSTOM-ENTRY:disabled
+{
+	background-color: #bbbbbb;
+	border-bottom: 1px solid transparent;
+	color: #999999;
+}

@@ -25,12 +25,13 @@ _ = gettext.gettext
 
 RSRC="/usr/share/lliurex-gdrive/"
 CSS_FILE="/usr/share/lliurex-gdrive/lliurex-gdrive.css"
+DISABLE_INDICATOR="~/.config/lliurex-google-drive-profiles/disableIndicator"
 PROFILE_IMAGE=RSRC+"rsrc/profile.svg"
 FOLDER_IMAGE=RSRC+"rsrc/folder.svg"
 MOUNT_ON_IMAGE=RSRC+"rsrc/mount_on.svg"
 MOUNT_OFF_IMAGE=RSRC+"rsrc/mount_off.svg"
-EDIT_IMAGE=RSRC+"rsrc/edit.svg"
-DELETE_IMAGE=RSRC+"rsrc/trash.svg"
+MANAGE_PROFILE_IMAGE=RSRC+"rsrc/manage_profile.svg"
+#DELETE_IMAGE=RSRC+"rsrc/trash.svg"
 MAX_RETRY_INTENTS=1200
 
 
@@ -41,6 +42,7 @@ class ProfileBox(Gtk.VBox):
 		Gtk.VBox.__init__(self)
 		
 		self.core=Core.Core.get_core()
+		self.disable_indicator=os.path.expanduser(DISABLE_INDICATOR)
 		
 		builder=Gtk.Builder()
 		builder.set_translation_domain('lliurex-gdrive')
@@ -52,7 +54,7 @@ class ProfileBox(Gtk.VBox):
 		self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT)
 
 		self.main_box=builder.get_object("profile_data_box")
-		self.profiles_list_label=builder.get_object("profiles_list_label")
+		#self.profiles_list_label=builder.get_object("profiles_list_label")
 		self.profile_list_box=builder.get_object("profile_list_box")
 		self.profile_list_vp=builder.get_object("profile_list_viewport")
 		self.msg_label=builder.get_object("msg_label")
@@ -61,7 +63,34 @@ class ProfileBox(Gtk.VBox):
 		image.set_from_stock(Gtk.STOCK_ADD,Gtk.IconSize.MENU)
 		
 		self.add_new_profile_button=builder.get_object("add_new_profile_button")
-		self.add_new_profile_button.set_image(image)
+		self.help_button=builder.get_object("help_button")
+		self.global_management_button=builder.get_object("global_management_button")
+		#self.add_new_profile_button.set_image(image)
+		self.popover = Gtk.Popover()
+		vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+		indicator_box=Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+		indicator_box.set_margin_left(10)
+		indicator_box.set_margin_right(10)
+		indicator_eb=Gtk.EventBox()
+		indicator_eb.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK | Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.LEAVE_NOTIFY_MASK)
+		indicator_eb.connect("button-press-event", self.manage_menu_indicator)
+		indicator_eb.connect("motion-notify-event", self.mouse_over_popover)
+		indicator_eb.connect("leave-notify-event", self.mouse_exit_popover)
+		self.indicator_label=Gtk.Label()
+
+		if not os.path.exists(self.disable_indicator):
+			self.indicator_label.set_text(_("Hide menu indicator at login"))
+		else:
+			self.indicator_label.set_text(_("Show menu indicator at login"))
+
+		indicator_eb.add(self.indicator_label)
+		indicator_box.add(indicator_eb)
+		vbox.pack_start(indicator_box, True, True,8)
+		vbox.show_all()
+		self.popover.add(vbox)
+		self.popover.set_position(Gtk.PositionType.BOTTOM)
+		self.popover.set_relative_to(self.global_management_button)
+
 		self.new_profile_window=builder.get_object("new_profile_window")
 		self.data=builder.get_object("data")
 		self.edit_profile_box=builder.get_object("edit_profile_box")
@@ -92,6 +121,7 @@ class ProfileBox(Gtk.VBox):
 		self.gdrive_combobox_label=builder.get_object("gdrive_combobox_label")
 		self.gdrive_combobox=builder.get_object("gdrive_combobox")
 		self.return_combobox_button=builder.get_object("return_combobox_button")
+		self.cancel_combobox_button=builder.get_object("cancel_combobox_button")
 		
 					
 		self.syncfolders_model=Gtk.ListStore(str)
@@ -170,7 +200,7 @@ class ProfileBox(Gtk.VBox):
 		self.style_provider.load_from_file(f)
 
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),self.style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-		self.profiles_list_label.set_name("OPTION_LABEL")
+		#self.profiles_list_label.set_name("OPTION_LABEL")
 		self.profile_label.set_name("OPTION_LABEL")
 		self.email_label.set_name("OPTION_LABEL")
 		self.mountpoint_label.set_name("OPTION_LABEL")
@@ -180,7 +210,9 @@ class ProfileBox(Gtk.VBox):
 		self.root_folder_param_label.set_name("OPTION_LABEL")
 		self.gdrive_combobox_label.set_name("OPTION_LABEL")
 		self.gdrive_folder_label.set_name("OPTION_LABEL")
-		self.gdrive_folder_entry.set_name("GDRIVE_FOLDER")
+		self.profile_entry.set_name("CUSTOM-ENTRY")
+		self.email_entry.set_name("CUSTOM-ENTRY")
+		self.gdrive_folder_entry.set_name("CUSTOM-ENTRY")
 		
 			
 	#def set-css_info
@@ -189,6 +221,8 @@ class ProfileBox(Gtk.VBox):
 	def connect_signals(self):
 
 		self.add_new_profile_button.connect("clicked",self.add_new_profile_button_clicked)
+		self.help_button.connect("clicked",self.help_clicked)
+		self.global_management_button.connect("clicked",self.global_management_button_clicked)
 		self.accept_add_profile_button.connect("clicked",self.accept_add_profile_clicked)
 		self.cancel_add_profile_button.connect("clicked",self.cancel_add_profile_clicked)
 		self.new_profile_window.connect("delete_event",self.hide_window)
@@ -197,6 +231,7 @@ class ProfileBox(Gtk.VBox):
 		self.root_folder_param_entry.connect("notify::active",self.root_folder_clicked)
 		self.return_combobox_button.connect("clicked",self.return_combobox_button_clicked)
 		self.edit_gdrive_folder_button.connect("clicked",self.edit_gdrive_folder_button_clicked)
+		self.cancel_combobox_button.connect("clicked",self.cancel_combobox_button_clicked)
 
 
 	#def connect_signals
@@ -368,7 +403,9 @@ class ProfileBox(Gtk.VBox):
 
 	#def add_new_profile_button_clicked	
 
-	def delete_profile_clicked(self,button,hbox):
+	def delete_profile_clicked(self,widget,event,hbox):
+
+		popover=hbox.get_children()[5].popover.hide()
 
 		dialog = Gtk.MessageDialog(None,0,Gtk.MessageType.WARNING, Gtk.ButtonsType.YES_NO, "Lliurex GDrive")
 		dialog.format_secondary_text(_("Do you want delete the profile?"))
@@ -483,8 +520,9 @@ class ProfileBox(Gtk.VBox):
 		
 	#def sync_profile	
 
-	def edit_profile_clicked(self,button,hbox):
+	def edit_profile_clicked(self,widget,event,hbox):
 
+		popover=hbox.get_children()[5].popover.hide()
 		self.edition=True
 		self.read=False
 		self.core.lgd.check_plabel.set_text(_("Checking connection to google..."))
@@ -588,22 +626,54 @@ class ProfileBox(Gtk.VBox):
 		folder=Gtk.Label()
 		folder.set_text(mountpoint)
 		folder.set_margin_left(10)
-		delete=Gtk.Button()
-		delete_image=Gtk.Image.new_from_file(DELETE_IMAGE)
-		delete.add(delete_image)
-		delete.set_halign(Gtk.Align.CENTER)
-		delete.set_valign(Gtk.Align.CENTER)
-		delete.set_name("DELETE_ITEM_BUTTON")
-		delete.connect("clicked",self.delete_profile_clicked,hbox)
-		delete.set_tooltip_text(_("Delete profile"))
-		edit=Gtk.Button()
-		edit_image=Gtk.Image.new_from_file(EDIT_IMAGE)
-		edit.add(edit_image)
-		edit.set_halign(Gtk.Align.CENTER)
-		edit.set_valign(Gtk.Align.CENTER)
-		edit.set_name("EDIT_ITEM_BUTTON")
-		edit.connect("clicked",self.edit_profile_clicked,hbox)
-		edit.set_tooltip_text(_("Edit profile"))
+		
+		manage_profile=Gtk.Button()
+		manage_profile_image=Gtk.Image.new_from_file(MANAGE_PROFILE_IMAGE)
+		manage_profile.add(manage_profile_image)
+		manage_profile.set_halign(Gtk.Align.CENTER)
+		manage_profile.set_valign(Gtk.Align.CENTER)
+		manage_profile.set_name("EDIT_ITEM_BUTTON")
+		manage_profile.connect("clicked",self.manage_profile_options,hbox)
+		manage_profile.set_tooltip_text(_("Manage profile"))
+
+		popover = Gtk.Popover()
+		manage_profile.popover=popover
+		vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+		edit_box=Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+		edit_box.set_margin_left(10)
+		edit_box.set_margin_right(10)
+		edit_eb=Gtk.EventBox()
+		edit_eb.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK | Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.LEAVE_NOTIFY_MASK)
+		edit_eb.connect("button-press-event", self.edit_profile_clicked,hbox)
+		edit_eb.connect("motion-notify-event", self.mouse_over_popover)
+		edit_eb.connect("leave-notify-event", self.mouse_exit_popover)
+		edit_label=Gtk.Label()
+		edit_label.set_text(_("Edit profile"))
+		edit_eb.add(edit_label)
+		edit_box.add(edit_eb)
+		
+		delete_box=Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+		delete_box.set_margin_left(10)
+		delete_box.set_margin_right(10)
+		delete_eb=Gtk.EventBox()
+		delete_eb.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK | Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.LEAVE_NOTIFY_MASK)
+		delete_eb.connect("button-press-event", self.delete_profile_clicked,hbox)
+		delete_eb.connect("motion-notify-event", self.mouse_over_popover)
+		delete_eb.connect("leave-notify-event", self.mouse_exit_popover)
+		delete_label=Gtk.Label()
+		delete_label.set_text(_("Delete profile"))
+		delete_eb.add(delete_label)
+		delete_box.add(delete_eb)
+
+		vbox.pack_start(edit_box, True, True,8)
+		vbox.pack_start(delete_box, True, True,8)
+		
+		vbox.show_all()
+		popover.add(vbox)
+		popover.set_position(Gtk.PositionType.BOTTOM)
+		popover.set_relative_to(manage_profile)
+
+
 		mount=Gtk.Button()
 		
 		if self.initial_connection:
@@ -627,8 +697,8 @@ class ProfileBox(Gtk.VBox):
 		hbox.pack_start(profile,False,False,0)
 		hbox.pack_start(folder_image,False,False,0)
 		hbox.pack_start(folder,False,False,0)
-		hbox.pack_end(delete,False,False,10)
-		hbox.pack_end(edit,False,False,10)
+		#hbox.pack_end(delete,False,False,10)
+		hbox.pack_end(manage_profile,False,False,10)
 		hbox.pack_end(mount,False,False,10)
 		hbox.show_all()
 		hbox.set_name("PROFILE_BOX")
@@ -672,7 +742,7 @@ class ProfileBox(Gtk.VBox):
 		email=self.email_entry.get_text()
 		self.new_email=email.strip()
 		self.new_mountpoint=self.mountpoint_entry.get_filename().decode("utf-8")
-		self.new_automount=self.automount_entry.get_state()
+		self.new_automount=self.automount_entry.get_active()
 		
 
 		if not self.edition:
@@ -933,6 +1003,10 @@ class ProfileBox(Gtk.VBox):
 		elif code==21:
 			msg_text=_("Error: To add a profile it is required that Chromium is not the default browser")		
 
+		elif code==22:
+			msg_text=_("The menu indicator has been disabled. It will hide automatically when you log in")
+		elif code==23:
+			msg_text=_("The menu indicator has been enabled. It will be displayed automatically when you close the application")	
 				
 		return msg_text		
 		
@@ -1029,8 +1103,10 @@ class ProfileBox(Gtk.VBox):
 			self.root_folder=False
 			self.gdrive_folder_label.hide()
 			self.gdrive_folder_entry.hide()
-			#self.gdrive_folder_entry.set_text("")
+			self.gdrive_folder_entry.set_text("")
 			self.edit_gdrive_folder_button.hide()	
+
+		self.previous_root_folder=self.gdrive_folder_entry.get_text()	
 
 	#def root_folder_clicked		
 
@@ -1115,13 +1191,12 @@ class ProfileBox(Gtk.VBox):
 	
 	def edit_gdrive_folder_button_clicked(self,widget):
 
-
+		self.previous_root_folder=self.gdrive_folder_entry.get_text()
 		self.init_threads()
 		self.profile_msg.hide()
 		self.profile_msg.set_text("")
 		self.init_read_mountpoint_dialog()
-
-			
+		
 
 	#def edit_gdrive_folder_button_clicked	
 	
@@ -1132,7 +1207,6 @@ class ProfileBox(Gtk.VBox):
 		#self.gdrive_folder_entry.set_text(self.folder)
 		#self.gdrive_folder=folder
 
-		
 		self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_RIGHT)
 		self.stack.set_visible_child_name("edit")	
 		self.accept_add_profile_button.show()
@@ -1140,28 +1214,96 @@ class ProfileBox(Gtk.VBox):
 		
 		self.gdrive_folder_label.show()
 		self.gdrive_folder_entry.show()
+		self.edit_gdrive_folder_button.show()
 		self.edit_gdrive_folder_button.set_sensitive(True)	
+				
 
 	#def return_combobox_button_clicked	
 
 	def on_gdrive_combobox_changed (self,combo):
 
-
-		
 		tree_iter=combo.get_active_iter()
 
 		
 		if tree_iter != None:
 			model = combo.get_model()
 			folder = model[tree_iter][0]
-			self.gdrive_folder_entry.set_text(folder)
+			if folder != "":
+				self.gdrive_folder_entry.set_text(folder)
 
 
-	#def on_gdrive_combobox_changeg		
+	#def on_gdrive_combobox_changeg	
 
-        
+	def help_clicked(self,widget):
+
+		lang=os.environ["LANG"]
+
+		if 'ca_ES' in lang:
+			cmd='xdg-open http://wiki.lliurex.net/tiki-index.php?page=LliureX%2BGDrive_va'
+		else:
+			cmd='xdg-open http://wiki.lliurex.net/tiki-index.php?page=LliureX+Gdrive'
+
+		os.system(cmd) 
+
+	#def help_clicked	   
+
+	def global_management_button_clicked(self,widget,event=None):
+
+		self.popover.show()
+
+	#def global_management_button_clicked	
+	
+	def manage_menu_indicator(self,widget,event=None):
+
+		if not os.path.exists(self.disable_indicator):
+			f=open(self.disable_indicator,'w')
+			f.close
+			self.popover.hide()
+			self.msg_label.set_text(self.get_msg(22))
+			self.indicator_label.set_text(_("Show menu indicator at login"))
+		else:
+			os.remove(self.disable_indicator)
+			self.popover.hide()
+			self.msg_label.set_text(self.get_msg(23))
+			self.indicator_label.set_text(_("Hide menu indicator at login"))
+
+	#def manage_menu_indicator		
 
 
+	def mouse_over_popover(self,widget,event=None):
+
+		widget.set_name("POPOVER_ON")
+
+	#def mouser_over_popover	
+
+	def mouse_exit_popover(self,widget,event=None):
+
+		widget.set_name("POPOVER_OFF")		
+
+	#def mouse_exit_popover	
+
+	def manage_profile_options(self,button,hbox,event=None):
+	
+		button.popover.show()
+
+	#def manage_profile_options
+
+	def cancel_combobox_button_clicked(self,widget,event=None):
+
+		self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_RIGHT)
+		self.stack.set_visible_child_name("edit")	
+		self.accept_add_profile_button.show()
+		self.cancel_add_profile_button.show()
+		
+		self.gdrive_folder_entry.set_text(self.previous_root_folder)
+		if self.previous_root_folder !="":
+			self.gdrive_folder_label.show()
+			self.gdrive_folder_entry.show()
+			self.edit_gdrive_folder_button.set_sensitive(True)	
+		
+		else:
+			self.root_folder_param_entry.set_active(False)
+	
 
 #class profilebox
 
