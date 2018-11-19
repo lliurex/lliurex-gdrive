@@ -120,7 +120,7 @@ class ProfileBox(Gtk.VBox):
 		self.gdrive_combobox_box=builder.get_object("gdrive_combobox_box")
 		self.gdrive_combobox_label=builder.get_object("gdrive_combobox_label")
 		self.gdrive_combobox=builder.get_object("gdrive_combobox")
-		self.return_combobox_button=builder.get_object("return_combobox_button")
+		self.apply_combobox_button=builder.get_object("apply_combobox_button")
 		self.cancel_combobox_button=builder.get_object("cancel_combobox_button")
 		
 					
@@ -229,7 +229,7 @@ class ProfileBox(Gtk.VBox):
 		self.mountpoint_entry.connect("file-set",self.check_mountpoint_folder)
 		self.gdrive_combobox.connect("changed",self.on_gdrive_combobox_changed)
 		self.root_folder_param_entry.connect("notify::active",self.root_folder_clicked)
-		self.return_combobox_button.connect("clicked",self.return_combobox_button_clicked)
+		self.apply_combobox_button.connect("clicked",self.apply_combobox_button_clicked)
 		self.edit_gdrive_folder_button.connect("clicked",self.edit_gdrive_folder_button_clicked)
 		self.cancel_combobox_button.connect("clicked",self.cancel_combobox_button_clicked)
 
@@ -1127,6 +1127,7 @@ class ProfileBox(Gtk.VBox):
 			if len(self.syncfolders_model)>1:
 				self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT)
 				self.stack.set_visible_child_name("folder")	
+				self.apply_combobox_button.set_sensitive(False)
 				self.gdrive_combobox.set_active(0)
 
 	#def init_read_mountpoint_dialog		
@@ -1152,6 +1153,7 @@ class ProfileBox(Gtk.VBox):
 				self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT)
 
 				self.stack.set_visible_child_name("folder")
+				self.apply_combobox_button.set_sensitive(False)
 				self.accept_add_profile_button.hide()
 				self.cancel_add_profile_button.hide()
 			else:
@@ -1201,7 +1203,7 @@ class ProfileBox(Gtk.VBox):
 	#def edit_gdrive_folder_button_clicked	
 	
 
-	def return_combobox_button_clicked(self,widget):
+	def apply_combobox_button_clicked(self,widget):
 
 		
 		#self.gdrive_folder_entry.set_text(self.folder)
@@ -1212,13 +1214,23 @@ class ProfileBox(Gtk.VBox):
 		self.accept_add_profile_button.show()
 		self.cancel_add_profile_button.show()
 		
-		self.gdrive_folder_label.show()
-		self.gdrive_folder_entry.show()
-		self.edit_gdrive_folder_button.show()
-		self.edit_gdrive_folder_button.set_sensitive(True)	
+		if self.previous_root_folder =="":
+			if self.gdrive_folder_entry.get_text()!="":
+				self.gdrive_folder_label.show()
+				self.gdrive_folder_entry.show()
+				self.edit_gdrive_folder_button.show()
+				self.edit_gdrive_folder_button.set_sensitive(True)	
+			else:
+				self.root_folder_param_entry.set_active(False)
+				self.edit_gdrive_folder_button.hide()	
+		else:
+			self.gdrive_folder_label.show()
+			self.gdrive_folder_entry.show()
+			self.edit_gdrive_folder_button.show()
+			self.edit_gdrive_folder_button.set_sensitive(True)			
 				
 
-	#def return_combobox_button_clicked	
+	#def apply_combobox_button_clicked	
 
 	def on_gdrive_combobox_changed (self,combo):
 
@@ -1227,10 +1239,13 @@ class ProfileBox(Gtk.VBox):
 		
 		if tree_iter != None:
 			model = combo.get_model()
+
 			folder = model[tree_iter][0]
 			if folder != "":
 				self.gdrive_folder_entry.set_text(folder)
-
+				self.apply_combobox_button.set_sensitive(True)
+			else:
+				self.apply_combobox_button.set_sensitive(False)
 
 	#def on_gdrive_combobox_changeg	
 
