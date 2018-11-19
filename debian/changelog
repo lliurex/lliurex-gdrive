@@ -1,3 +1,9 @@
+lliurex-gdrive (0.3.36) bionic; urgency=medium
+
+  * Fixed root folder utility
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 19 Nov 2018 09:40:14 +0100
+
 lliurex-gdrive (0.3.35) bionic; urgency=medium
 
   * Redesign of the gui to apply new style
