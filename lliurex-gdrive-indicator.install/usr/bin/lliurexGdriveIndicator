@@ -63,6 +63,7 @@ class LliurexGdriveIndicator:
 		self.LliurexGoogleDriveManager=lliurexgdrive.LliurexGoogleDriveManager()
 		self.app_indicator=appindicator.Indicator.new("lliurex-gdrive",icon_name,appindicator.IndicatorCategory.APPLICATION_STATUS)
 		self.app_indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
+		self.app_indicator.set_title("LliureX-Gdrive")
 		self.menu = Gtk.Menu()
 		
 		self.menu.add_events(Gdk.EventMask.ALL_EVENTS_MASK)
