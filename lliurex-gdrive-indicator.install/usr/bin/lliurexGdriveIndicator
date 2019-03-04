@@ -71,7 +71,8 @@ class LliurexGdriveIndicator:
 		
 		self.profiles_info=self.LliurexGoogleDriveManager.profiles_config.copy()
 		self.current_status={}
-		self.blacklist=['.Trash','.Trash-1000']
+		self.blacklist_dir=['.Trash','.Trash-1000']
+		self.blacklist_file=['.directory']
 		self.init_files=[]
 		self.update_files=[]
 		self.local_changes={}
@@ -232,8 +233,9 @@ class LliurexGdriveIndicator:
 										self.main.init_folders_info(item,tmp_mountpoint)
 										wdd=wm.add_watch(tmp_mountpoint,mask,rec=True)
 									
-					else:	
-						self.register_change(event)
+					else:
+						if not os.path.basename(event.pathname)	not in self.main.blacklist_file:
+							self.register_change(event)
 
 			#def process_IN_CLOSE_WRITE			
 
@@ -447,7 +449,7 @@ class LliurexGdriveIndicator:
 		
 		
 		for item in listdir(path):
-			if item not in self.blacklist:
+			if item not in self.blacklist_dir:
 				
 				t=join(path,item)
 
@@ -923,13 +925,23 @@ class LliurexGdriveIndicator:
 								if len(diff_deletes)>0:	
 										tmp_del=diff_deletes.copy()
 										tmp_add=diff_changes.copy()
+										tmp_up=diff_changes.copy()
 										for item in diff_deletes:
 											file_d=item.split(":__")[0]
+											data_d=item.split(":__")[1]
+											data_d=datetime.datetime.strptime(data_d,'%Y-%m-%d %H:%M:%S')
 											for element in diff_changes:
 												file_c=element.split(":__")[0]
+												data_c=element.split(":__")[1]
+												data_c=datetime.datetime.strptime(data_c,'%Y-%m-%d %H:%M:%S')
 												if file_d == file_c:
 													tmp_del.remove(item)
 													tmp_add.remove(element)
+													if data_d>data_c:
+														tmp_up.remove(element)
+													else:
+														if (data_c-data_d).seconds<DELTA_DATA:
+															tmp_up.remove(element)	
 													break
 												else:
 													short_file_d=os.path.basename(file_d)
@@ -945,7 +957,7 @@ class LliurexGdriveIndicator:
 											tmp_up=diff_changes.difference(tmp_add)
 											info_changes['files_changes']=tmp_up
 										else:
-											info_changes['files_changes']=diff_changes	
+											info_changes['files_changes']=tmp_up	
 												
 								else:
 									info_changes['files_add']=diff_changes			
