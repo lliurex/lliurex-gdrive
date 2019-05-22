@@ -1,3 +1,9 @@
+lliurex-gdrive (0.3.37) bionic; urgency=medium
+
+  * Added service to dismount when session end
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 22 May 2019 12:46:14 +0200
+
 lliurex-gdrive (0.3.36) bionic; urgency=medium
 
   * Fixed root folder utility
