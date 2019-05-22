@@ -1,0 +1,11 @@
+[Unit]
+Description=Lliurex-Gdrive End Session
+ConditionUser=!@System
+
+[Service]
+Type=oneshot
+ExecStart=/bin/true
+ExecStop=/usr/bin/lliurex-gdrive-endsession
+
+[Install]
+WantedBy=default.target
