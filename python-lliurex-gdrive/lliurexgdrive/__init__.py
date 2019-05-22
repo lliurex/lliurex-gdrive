@@ -16,6 +16,7 @@ DEBUG=False
 GDRIVE_CONFIG_DIR=os.path.expanduser("~/.gdfuse/")
 LLIUREX_CONFIG_FILE_64='/usr/share/lliurex-gdrive/llx-data/config_64'
 LLIUREX_CONFIG_FILE_32='/usr/share/lliurex-gdrive/llx-data/config_32'
+GDRIVE_ENDSESSION_SERVICE='/usr/share/lliurex-gdrive/llx-data/llxgdrive-endsession.service'
 FIREFOX_BROWSER_BIN='/usr/share/lliurex-gdrive/llx-data/firefox-browser'
 CHROME_BROWSER_BIN='/usr/share/lliurex-gdrive/llx-data/chrome-browser'
 	
@@ -29,7 +30,7 @@ class LliurexGoogleDriveManager(object):
 
 		self.config_dir=os.path.expanduser("~/.config/lliurex-google-drive-profiles/")
 		self.config_file=self.config_dir+"configProfiles"
-		
+		self.systemd_user=os.path.expanduser("~/.config/systemd/user/")
 		self.bin_dir=os.path.expanduser("~/.local/bin")
 		self.chromium_path=self.bin_dir+"/chromium-browser"
 		self.mount_cmd="google-drive-ocamlfuse -label %s %s"
@@ -445,7 +446,9 @@ class LliurexGoogleDriveManager(object):
 		result=self.mount_drive(profile,mountpoint)
 		
 		if result["result"]:
+			self.manage_systemd_unit("create")
 			self.save_profiles(info)
+						
 		else:
 			if profile !="":
 				if os.path.exists(GDRIVE_CONFIG_DIR+profile):
@@ -514,7 +517,7 @@ class LliurexGoogleDriveManager(object):
 						self.dprint(msg_log)
 					self.save_profiles(info)
 				
-				return dismount	
+				result=dismount	
 				
 
 		else:
@@ -525,6 +528,7 @@ class LliurexGoogleDriveManager(object):
 			result['result']=True
 			result['code']=0
 		
+		self.manage_systemd_unit("delete",info)
 		return result
 		
 			
@@ -852,7 +856,25 @@ class LliurexGoogleDriveManager(object):
 
 		return
 		
-	#def remove_chromium_tmpbin			
+	#def remove_chromium_tmpbin		
+
+	def manage_systemd_unit(self,action,info=None):
+
+		if action=="create":
+			if not os.path.exists(self.systemd_user):
+				os.makedirs(self.systemd_user)
+				shutil.copy(GDRIVE_ENDSESSION_SERVICE,self.systemd_user)
+			else:	
+				if not os.path.exists(os.path.join(self.systemd_user,"lxgdrive-endsession.service")):	
+					shutil.copy(GDRIVE_ENDSESSION_SERVICE,self.systemd_user)
+			os.system("systemctl --user enable llxgdrive-endsession.service || true")
+			os.system("systemctl --user start llxgdrive-endsession.service || true")
+		else:
+			if os.path.exists(self.systemd_user):
+				if info!=None and len(info)==0:
+					os.system("systemctl --user stop llxgdrive-endsession.service || true")
+					os.system("systemctl --user disable llxgdrive-endsession.service || true")
+
 
 	def log(self,msg):
 		

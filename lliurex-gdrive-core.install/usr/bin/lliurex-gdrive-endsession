@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+import lliurexgdrive
+import os
+import subprocess
+import syslog
+import sys
+
+import gi
+gi.require_version("Gtk","3.0")
+from gi.repository import Gtk,GObject,Gio
+
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+PROFILES_PATH="~/.config/lliurex-google-drive-profiles/configProfiles"
+DISABLE_INDICATOR="~/.config/lliurex-google-drive-profiles/disableIndicator"
+LOCK_INDICATOR="~/.config/lliurex-google-drive-profiles/lgdIndicator.lock"
+LOCK_GUI="~/.config/lliurex-google-drive-profiles/lgdGUI.lock"
+
+
+class LliurexGdriveEndSession:
+
+	def __init__(self):
+		
+		self.LliurexGoogleDriveManager=lliurexgdrive.LliurexGoogleDriveManager()
+		self.disable_indicator=os.path.expanduser(DISABLE_INDICATOR)
+		self.profiles_path=os.path.expanduser(PROFILES_PATH)
+		self.lock_gui=os.path.expanduser(LOCK_GUI)
+		self.lock_indicator=os.path.expanduser(LOCK_INDICATOR)
+
+		self.launch_endsession()
+
+	#def __init__	
+	
+			
+	def launch_endsession(self):
+
+		try:
+			self.dismount()
+			self.delete_lock()
+			self.quit()
+		except:
+			pass
+
+		sys.exit(0)	
+	
+	#def launch_endsession	
+
+
+	def dismount(self):
+		
+		if len(self.LliurexGoogleDriveManager.profiles_config):
+			if self.LliurexGoogleDriveManager.check_google_connection():
+				for profile in self.LliurexGoogleDriveManager.profiles_config:
+					mountpoint=self.LliurexGoogleDriveManager.profiles_config[profile]["mountpoint"]
+					status=self.LliurexGoogleDriveManager.check_mountpoint_status(mountpoint)
+					if status["status"]:
+						self.LliurexGoogleDriveManager.dismount_mountpoint(mountpoint,profile)
+
+	#def dismount				
+					
+	def delete_lock(self):
+				
+	
+		if os.path.exists(self.lock_indicator):
+			os.remove(self.lock_indicator)
+
+		if os.path.exists(self.lock_gui):
+			os.remove(self.lock_gui)	
+	
+	#def delete_lock		
+
+	def quit(self):
+		
+		Gtk.main_quit()		
+		
+	#def quit
+	
+#class LliurexGdriveEndSession 		
+
+if __name__=="__main__":
+
+	llxgds=LliurexGdriveEndSession()
+	Gtk.main()
