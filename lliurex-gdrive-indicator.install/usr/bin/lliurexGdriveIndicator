@@ -1037,7 +1037,7 @@ class LliurexGdriveIndicator:
 
 if __name__=="__main__":
 	
-	lliurexgdrive=LliurexGdriveIndicator("gdrive")
+	lliurexgdrive=LliurexGdriveIndicator("gdrive-indicator")
 	GObject.threads_init()
 	Gtk.main()
 	
