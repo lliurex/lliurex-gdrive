@@ -998,7 +998,7 @@ class LliurexGdriveIndicator:
 
 	def show_message(self,message):
 		notify2.init("llxgdrive")
-		n=notify2.Notification("Lliurex-GDrive",message,"gdrive")
+		n=notify2.Notification("Lliurex-GDrive",message,"gdrive-indicator")
 		n.show()
 		return
 
