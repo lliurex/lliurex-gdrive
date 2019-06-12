@@ -16,7 +16,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="gdrive.svg">
+   sodipodi:docname="gdrive-indicator.svg">
   <defs
      id="defs4">
     <linearGradient
@@ -39,7 +39,7 @@
      inkscape:cx="-238.82274"
      inkscape:cy="182.96424"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g1581"
      showgrid="false"
      inkscape:snap-bbox="true"
      inkscape:bbox-nodes="false"
@@ -75,19 +75,19 @@
          inkscape:connector-curvature="0"
          id="rect5627"
          d="m 89.99401,846.05643 27.98985,69.60451 -61.0932,105.42686 -31.447052,-55.19921 z"
-         style="opacity:1;fill:#1bc371;fill-opacity:1;stroke:#0b5532;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.70588235" />
+         style="opacity:1;fill:#232627;fill-opacity:1;stroke:#0b5532;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.70588235" />
       <path
          sodipodi:nodetypes="ccccc"
          inkscape:connector-curvature="0"
          id="rect5627-0"
          d="m 221.43842,965.97514 -30.26985,56.04116 -133.97716,-1.0114 43.179,-54.73531 z"
-         style="opacity:1;fill:#1bc371;fill-opacity:1;stroke:#0b5532;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.70588235" />
+         style="opacity:1;fill:#232627;fill-opacity:1;stroke:#0b5532;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.70588235" />
       <path
          sodipodi:nodetypes="ccccc"
          inkscape:connector-curvature="0"
          id="rect5627-9"
          d="m 221.16167,966.72514 -69.31966,-10.854 -61.47285,-109.08136 64.05435,-0.8013 z"
-         style="opacity:1;fill:#1bc371;fill-opacity:1;stroke:#0b5532;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.70588235" />
+         style="opacity:1;fill:#232627;fill-opacity:1;stroke:#0b5532;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.70588235" />
     </g>
   </g>
 </svg>
