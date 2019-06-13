@@ -1,3 +1,9 @@
+lliurex-gdrive (0.3.39) bionic; urgency=medium
+
+  * Fixed indicator icon
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 13 Jun 2019 13:05:42 +0200
+
 lliurex-gdrive (0.3.38) bionic; urgency=medium
 
   * Changed app and indicator icon
