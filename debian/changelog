@@ -1,3 +1,9 @@
+lliurex-gdrive (0.3.38) bionic; urgency=medium
+
+  * Changed app and indicator icon
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 13 Jun 2019 09:01:58 +0200
+
 lliurex-gdrive (0.3.37) bionic; urgency=medium
 
   * Added service to dismount when session end
