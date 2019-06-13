@@ -401,7 +401,7 @@ class LliurexGdriveIndicator:
 		label_item=_("Help")
 		item.set_label(label_item)
 		img=Gtk.Image()
-		img.set_from_stock(Gtk.STOCK_HELP,Gtk.IconSize.MENU)
+		img.set_from_stock("system-help",Gtk.IconSize.MENU)
 		item.set_image(img)
 		item.set_always_show_image(True)
 		item.connect("activate",self.help)
