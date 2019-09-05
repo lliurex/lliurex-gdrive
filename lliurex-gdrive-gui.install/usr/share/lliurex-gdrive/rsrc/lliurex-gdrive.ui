@@ -8,6 +8,7 @@
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
+    <property name="icon_name">gdrive</property>
     <property name="deletable">False</property>
     <child>
       <placeholder/>
@@ -573,6 +574,7 @@
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center</property>
+    <property name="icon_name">gdrive</property>
     <property name="transient_for">main_window</property>
     <child>
       <placeholder/>
