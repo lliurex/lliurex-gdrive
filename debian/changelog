@@ -1,3 +1,11 @@
+lliurex-gdrive (0.3.42) bionic; urgency=medium
+
+  * Updated link to help
+  * Improved performance of systray icon
+  * Added icons for google-drive documents mimetypes	
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 05 Sep 2019 13:40:23 +0200
+
 lliurex-gdrive (0.3.41) bionic; urgency=medium
 
   * Adding ca@valencia
