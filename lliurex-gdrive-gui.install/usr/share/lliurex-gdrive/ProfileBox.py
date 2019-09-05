@@ -1254,9 +1254,9 @@ class ProfileBox(Gtk.VBox):
 		lang=os.environ["LANG"]
 
 		if 'ca_ES' in lang:
-			cmd='xdg-open http://wiki.lliurex.net/tiki-index.php?page=LliureX%2BGDrive_va'
+			cmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=LliureX-Gdrive-en-Bionic_va'
 		else:
-			cmd='xdg-open http://wiki.lliurex.net/tiki-index.php?page=LliureX+Gdrive'
+			cmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=LliureX-Gdrive-en-Bionic'
 
 		os.system(cmd) 
 

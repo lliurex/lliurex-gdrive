@@ -137,9 +137,22 @@ class LliurexGdrive:
 
 		#self.lockpath=R=os.path(LOCK_INDICATOR)
 		if len(self.load_profiles):
-			if not os.path.exists(self.lock_indicator):
-				cmd="/usr/bin/lliurexGdriveIndicator" + "&"
+			
+			if os.path.exists(self.lock_indicator):
+
+				f=open(self.lock_indicator,'r')
+				indicator_pid=f.readline().split('\n')[0]
+				f.close()
+				cmd="kill "+indicator_pid
 				os.system(cmd)
+				os.remove(self.lock_indicator)
+			else:	
+				if os.system("ps -ef | grep 'lliurexGdriveIndicator' | grep -v 'grep' 1>/dev/null")==0:
+					cmd="ps -ef | grep lliurexGdriveIndicator | grep -v grep | awk '{print $2}' | xargs kill -9"				
+					os.system(cmd)
+
+			cmd="/usr/bin/lliurexGdriveIndicator" + "&"
+			os.system(cmd)
 
 	#def launch_indicator
 	
