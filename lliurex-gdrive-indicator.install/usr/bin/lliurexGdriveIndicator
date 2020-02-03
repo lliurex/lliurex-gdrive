@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*
+
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -216,8 +218,10 @@ class LliurexGdriveIndicator:
 
 				else:
 					if 'ountToken' in os.path.basename(event.pathname):
+							
 							tmp_profile=os.path.basename(event.pathname).split("__")[0]
-							tmp_profile=tmp_profile.decode("utf-8")
+							#tmp_profile=tmp_profile.decode("utf-8")
+							
 							for item in self.main.profiles_info:
 								if item==tmp_profile:
 									tmp_mountpoint=self.main.profiles_info[item]["mountpoint"]
@@ -257,7 +261,7 @@ class LliurexGdriveIndicator:
 						state=os.stat(t)
 						
 					except Exception as e:
-						print str(e)
+						print(str(e))
 						t=t.split('trashinfo')
 						t=t[0]+'trashinfo'
 						state=os.stat(t)
@@ -287,7 +291,7 @@ class LliurexGdriveIndicator:
 					notifier.read_events()
 
 			except Exception as e:
-				print str(e)
+				print(str(e))
 				notifier.stop()
 		
 		return False
@@ -598,7 +602,9 @@ class LliurexGdriveIndicator:
 
 		
 		mountpoint=self.profiles_info[profile]["mountpoint"]
-		cmd="xdg-open " + mountpoint.encode("utf-8")
+		#cmd="xdg-open " + mountpoint.encode("utf-8")
+		cmd="xdg-open " + mountpoint
+
 
 		os.system(cmd)	
 
@@ -608,8 +614,8 @@ class LliurexGdriveIndicator:
 
 		message=self.refresh_cache_command(profile)
 		
-		message=message.decode("UTF-8")
-
+		#message=message.decode("UTF-8")
+		
 		time.sleep(0.5)
 		self.show_message(profile + ": " + message)	
 
@@ -617,7 +623,7 @@ class LliurexGdriveIndicator:
 
 	def refresh_cache_command(self,profile):
 
-		profile=profile.encode("utf-8")
+		#profile=profile.encode("utf-8")
 
 		try:
 			cmd="google-drive-ocamlfuse -cc -label %s"%profile

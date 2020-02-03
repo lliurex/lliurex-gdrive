@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # Copyright (C) 2006 James Westby <jw+debian@jameswestby.net>
 #
@@ -18,11 +18,11 @@
 
 from setuptools import setup
 
-setup(name='python-lliurexgdrive',
+setup(name='python3-lliurexgdrive',
       version='0.1',
       description='lliurex-gdrive library',
       url='http://lliurex.net',
-      package_dir={'': 'python-lliurex-gdrive'},
+      package_dir={'': 'python3-lliurex-gdrive'},
       packages=['lliurexgdrive'],
       maintainer='Juan Ramon Pelegrina',
       maintainer_email='juapesai@hotmail.com',

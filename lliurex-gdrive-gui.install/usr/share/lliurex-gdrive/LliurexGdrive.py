@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -160,11 +161,9 @@ class LliurexGdrive:
 
 		if self.show_indicator:
 			if os.path.exists(self.disable_indicator):
-				print("ACTIVANDO")
 				os.remove(self.disable_indicator)	
 		else:
 			if not os.path.exists(self.disable_indicator):
-				print("DESACTIVANDO")
 				f=open(self.disable_indicator,'w')
 				f.close
 
