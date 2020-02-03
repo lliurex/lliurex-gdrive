@@ -1,3 +1,9 @@
+lliurex-gdrive (0.3.43) bionic; urgency=medium
+
+  * Migrated to python3
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 03 Feb 2020 14:03:40 +0100
+
 lliurex-gdrive (0.3.42) bionic; urgency=medium
 
   * Updated link to help
