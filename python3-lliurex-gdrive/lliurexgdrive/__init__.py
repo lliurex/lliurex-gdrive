@@ -1,11 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*
+
 import glob
-import ConfigParser
+import configparser
 import os
 import json
 import subprocess
 import shutil
-import urllib2
+import urllib.request
 import datetime
 import platform
 import time
@@ -58,7 +60,7 @@ class LliurexGoogleDriveManager(object):
 		# var["default"]["automount"]=""
 
 		f=open(self.config_file,"w")
-		data=unicode(json.dumps(var,indent=4,encoding="utf-8",ensure_ascii=False)).encode("utf-8")
+		data=json.dumps(var,indent=4,ensure_ascii=False)
 
 		f.write(data)
 		f.close()
@@ -92,7 +94,7 @@ class LliurexGoogleDriveManager(object):
 	def check_config(self,profile):
 		
 		path=GDRIVE_CONFIG_DIR+profile+"/state"
-		profile=profile.encode("utf-8")
+		#profile=profile.encode("utf-8")
 
 		if os.path.exists(path):
 			f=open(path)
@@ -122,8 +124,7 @@ class LliurexGoogleDriveManager(object):
 	def check_google_connection(self):
 
 		try:
-			req=urllib2.Request("http://google.com")
-			res=urllib2.urlopen(req)
+			req=urllib.request.urlopen("http://google.com")
 			return True
 		except:
 			msg_log="Check connection: Cannot connect to google.com"
@@ -139,7 +140,7 @@ class LliurexGoogleDriveManager(object):
 		#mountpoint=mountpoint.encode("utf-8")
 				
 		try:
-			
+
 			if os.path.exists(GDRIVE_CONFIG_DIR+profile):
 				check= self.check_config(profile)
 				if check:
@@ -152,7 +153,9 @@ class LliurexGoogleDriveManager(object):
 								try:
 									os.makedirs(mountpoint)
 								except:
-									msg_log="Mount drive: Unable to create '%s' mount destination"%mountpoint.encode("utf-8")
+									#msg_log="Mount drive: Unable to create '%s' mount destination"%mountpoint.encode("utf-8")
+									msg_log="Mount drive: Unable to create '%s' mount destination"%mountpoint
+
 									self.dprint(msg_log)
 									self.log(msg_log)
 									return {"result":False,"code":1}
@@ -163,20 +166,27 @@ class LliurexGoogleDriveManager(object):
 								cmd=self.mount_cmd%(profile,mountpoint)
 								p=subprocess.Popen(cmd,shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 								poutput,perror=p.communicate()
+								
 								if len(perror)==0:
-									msg_log="Mount drive: drive '%s' mounted sucessfully:"%mountpoint.encode("utf-8")
+									#msg_log="Mount drive: drive '%s' mounted sucessfully:"%mountpoint.encode("utf-8")
+									msg_log="Mount drive: drive '%s' mounted sucessfully:"%mountpoint
 									self.dprint(msg_log)
 									self.log(msg_log)
 									return {"result":True,"code":0}
 
 								else:
-									msg_log="Mount drive: Error mount '%s': %s"%(mountpoint.encode("utf-8"),str(perror))
+
+									if type(perror) is bytes:
+										perror=perror.decode()
+									#msg_log="Mount drive: Error mount '%s': %s"%(mountpoint.encode("utf-8"),str(perror))
+									msg_log="Mount drive: Error mount '%s': %s"%(mountpoint,str(perror))
 									self.code=2
 									self.dprint(msg_log)
 									self.log(msg_log)
 																	
 							else:
-								msg_log="Mount drive: Mount drive: '%s' mount destination is not owned by user"%mountpoint.encode("utf-8")
+								#msg_log="Mount drive: Mount drive: '%s' mount destination is not owned by user"%mountpoint.encode("utf-8")
+								msg_log="Mount drive: Mount drive: '%s' mount destination is not owned by user"%mountpoint
 								self.code=3
 								self.dprint(msg_log)
 								self.log(msg_log)
@@ -187,12 +197,14 @@ class LliurexGoogleDriveManager(object):
 							self.dprint(msg_log)
 							self.log(msg_log)
 				else:
-					msg_log="Mount drive: '%s' mount point not configured"%profile.encode("utf-8")
+					#msg_log="Mount drive: '%s' mount point not configured"%profile.encode("utf-8")
+					msg_log="Mount drive: '%s' mount point not configured"%profile
 					self.code=5
 					self.dprint(msg_log)
 					self.log(msg_log)
 			else:
-				msg_log="Mount drive: '%s' GDrive profile path does not exist"%profile.encode("utf-8")
+				#msg_log="Mount drive: '%s' GDrive profile path does not exist"%profile.encode("utf-8")
+				msg_log="Mount drive: '%s' GDrive profile path does not exist"%profile
 				self.code=6
 				self.dprint(msg_log)
 				self.log(msg_log)
@@ -234,7 +246,7 @@ class LliurexGoogleDriveManager(object):
 		
 		f=open(self.config_file,"w")
 		#data=json.dumps(info,indent=4,encoding="utf-8",ensure_ascii=False)
-		data=unicode(json.dumps(info,indent=4,encoding="utf-8",ensure_ascii=False)).encode("utf-8")
+		data=json.dumps(info,indent=4,ensure_ascii=False)
 		f.write(data)
 		f.close()
 
@@ -258,10 +270,12 @@ class LliurexGoogleDriveManager(object):
 				
 			p=subprocess.Popen(command,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 			poutput,perror=p.communicate()
-
+			
 			if len(poutput)>0:
 				status=True
 
+				if type(poutput) is bytes:
+					poutput=poutput.decode()
 				for item in poutput.split(" "):
 					if len(item)>1:
 						tmp.append(item)
@@ -323,8 +337,10 @@ class LliurexGoogleDriveManager(object):
 					else:
 						cont=0
 						for item in self.gdrive_path:
+							'''
 							if type(item) is str:
 								item=item.decode("utf-8")
+							'''
 							if item == gdrive_folder:
 								cont=cont+1
 						if cont==0:
@@ -335,7 +351,8 @@ class LliurexGoogleDriveManager(object):
 						return {"result":False,"code":20}
 					else:
 						tmp_mountpoint=tempfile.mkdtemp('_Gdrive')
-						cmd=self.clean_cache%profile.encode("utf-8")
+						#cmd=self.clean_cache%profile.encode("utf-8")
+						cmd=self.clean_cache%profile
 						os.system(cmd)
 						self.mount_drive(profile,tmp_mountpoint)
 						status=self.check_mountpoint_status(tmp_mountpoint)
@@ -420,9 +437,15 @@ class LliurexGoogleDriveManager(object):
 		#profile=unicode(profile).encode("utf-8")
 		path=GDRIVE_CONFIG_DIR+profile+"/config"
 
+		
 		if not self.check_config(profile):
-			os.system("google-drive-ocamlfuse -label %s"%unicode(profile).encode("utf-8"))
-			msg_log=("'%s' profile has been create")%profile.encode("utf-8")
+			#os.system("google-drive-ocamlfuse -label %s"%unicode(profile).encode("utf-8"))
+			#command="google-drive-ocamlfuse -label %s"%str(profile).encode("utf-8")
+			#print(command)
+			command="google-drive-ocamlfuse -label %s"%profile
+			os.system(command)
+			#msg_log=("'%s' profile has been create")%profile.encode("utf-8")
+			msg_log=("'%s' profile has been create")%profile
 			self.log(msg_log)
 			self.dprint(msg_log)
 
@@ -431,9 +454,9 @@ class LliurexGoogleDriveManager(object):
 					shutil.copy(LLIUREX_CONFIG_FILE_64,path )
 				else:
 					shutil.copy(LLIUREX_CONFIG_FILE_32,path )
-			
+				
 			self.remove_chromium_tmpbin()
-
+		
 		return True
 				
 			
@@ -469,8 +492,10 @@ class LliurexGoogleDriveManager(object):
 		p=subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		poutput,perror=p.communicate()
 
-		mountpoint=mountpoint.encode("utf-8")
+		#mountpoint=mountpoint.encode("utf-8")
 		if len(perror)>0:
+			if type(perror) is bytes:
+				perror=perror.decode()
 			msg_log="Dismount mountpoint: Error dismounted '%s': '%s'"%(mountpoint,str(perror))
 			self.dprint(msg_log)
 			self.log(msg_log)
@@ -512,7 +537,8 @@ class LliurexGoogleDriveManager(object):
 				if dismount["result"]:
 					if profile!="":
 						shutil.rmtree(os.path.join(GDRIVE_CONFIG_DIR+profile))
-						msg_log="Delete profile: '%s' profile has been delete"%profile.encode("utf-8")
+						#msg_log="Delete profile: '%s' profile has been delete"%profile.encode("utf-8")
+						msg_log="Delete profile: '%s' profile has been delete"%profile
 						self.log(msg_log)
 						self.dprint(msg_log)
 					self.save_profiles(info)
@@ -522,7 +548,8 @@ class LliurexGoogleDriveManager(object):
 
 		else:
 			self.save_profiles(info)
-			msg_log="Delete profile: '%s' GDrive profile path does not exist"%profile.encode("utf-8")
+			#msg_log="Delete profile: '%s' GDrive profile path does not exist"%profile.encode("utf-8")
+			msg_log="Delete profile: '%s' GDrive profile path does not exist"%profile
 			self.log(msg_log)
 			self.dprint(msg_log)
 			result['result']=True
@@ -595,7 +622,8 @@ class LliurexGoogleDriveManager(object):
 				
 		if result["result"]:
 			self.save_profiles(info)
-			msg_log="Edit profile: '%s' profile has been edited"%profile.encode("utf-8")
+			#msg_log="Edit profile: '%s' profile has been edited"%profile.encode("utf-8")
+			msg_log="Edit profile: '%s' profile has been edited"%profile
 			self.log(msg_log)
 			self.dprint(msg_log)
 
@@ -663,12 +691,14 @@ class LliurexGoogleDriveManager(object):
 		directory=[]
 		
 		
-		mountpoint=self.profiles_config[profile.decode("utf-8")]["mountpoint"]
+		#mountpoint=self.profiles_config[profile.decode("utf-8")]["mountpoint"]
+		mountpoint=self.profiles_config[profile]["mountpoint"]
 
 			
 		
 		try:
-			root_folder=self.profiles_config[profile.decode("utf-8")]["root_folder"]
+			#root_folder=self.profiles_config[profile.decode("utf-8")]["root_folder"]
+			root_folder=self.profiles_config[profile]["root_folder"]
 		except Exception as e:
 			root_folder=False
 		
@@ -702,7 +732,9 @@ class LliurexGoogleDriveManager(object):
 				os.system(cmd)
 			
 			tmp_mountpoint=tempfile.mkdtemp('_Gdrive')					
-			result=self.mount_drive(profile.decode("utf-8"),tmp_mountpoint)
+			#result=self.mount_drive(profile.decode("utf-8"),tmp_mountpoint)
+			result=self.mount_drive(profile,tmp_mountpoint)
+				
 				
 			mountpoint=tmp_mountpoint
 
@@ -761,7 +793,8 @@ class LliurexGoogleDriveManager(object):
 		cont=0
 		for line in old_config:
 			if 'root_folder' in line:
-				line='root_folder='+'/'+gdrive_folder.encode("utf-8")+'\n'	
+				#line='root_folder='+'/'+gdrive_folder.encode("utf-8")+'\n'
+				line='root_folder='+'/'+gdrive_folder+'\n'	
 				cont=cont+1
 			params.append(line)
 				
@@ -865,7 +898,7 @@ class LliurexGoogleDriveManager(object):
 				os.makedirs(self.systemd_user)
 				shutil.copy(GDRIVE_ENDSESSION_SERVICE,self.systemd_user)
 			else:	
-				if not os.path.exists(os.path.join(self.systemd_user,"lxgdrive-endsession.service")):	
+				if not os.path.exists(os.path.join(self.systemd_user,"llxgdrive-endsession.service")):	
 					shutil.copy(GDRIVE_ENDSESSION_SERVICE,self.systemd_user)
 			os.system("systemctl --user enable llxgdrive-endsession.service || true")
 			os.system("systemctl --user start llxgdrive-endsession.service || true")

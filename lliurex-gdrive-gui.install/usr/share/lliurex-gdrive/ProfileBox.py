@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*
 
 
 import gi
@@ -9,7 +10,6 @@ import copy
 import gettext
 import Core
 
-import Dialog
 import time
 import threading
 import multiprocessing
@@ -416,7 +416,7 @@ class ProfileBox(Gtk.VBox):
 		if response==Gtk.ResponseType.YES:
 			profile=hbox.get_children()[1].get_text().split("\n")[0]
 			#ENCODING TO UNICODE			
-			profile=profile.decode("utf-8")
+			#profile=profile.decode("utf-8")
 			self.delete_profile_t=threading.Thread(target=self.delete_profile,args=(profile,))
 			self.delete_profile_t.daemon=True
 			GObject.threads_init()
@@ -498,7 +498,8 @@ class ProfileBox(Gtk.VBox):
 
 			info=self.item_status_info(self.status_info['status'])
 			profile=hbox.get_children()[1].get_text().split("\n")[0]
-			self.current_status[profile.decode("utf-8")]=self.status_info["status"]
+			#self.current_status[profile.decode("utf-8")]=self.status_info["status"]
+			self.current_status[profile]=self.status_info["status"]
 			button.set_tooltip_text(info["tooltip"])
 			button.set_name(info["css"])		
 			hbox.get_children()[4].set_image(info["img"])	
@@ -512,8 +513,8 @@ class ProfileBox(Gtk.VBox):
 		profile=hbox.get_children()[1].get_text().split("\n")[0]
 		mountpoint=hbox.get_children()[3].get_text()
 		# ENCODING TO UNICODE		
-		profile=profile.decode("utf-8")
-		mountpoint=mountpoint.decode("utf-8")
+		#profile=profile.decode("utf-8")
+		#mountpoint=mountpoint.decode("utf-8")
 		connect=True
 		current_status=self.current_status[profile]
 		self.status_mod,self.status_info=self.core.LliurexGoogleDriveManager.sync_profile(profile,mountpoint,current_status)
@@ -555,18 +556,21 @@ class ProfileBox(Gtk.VBox):
 				self.email_entry.set_text(email)
 				mountpoint=self.profile_to_edit.get_children()[3].get_text()
 				self.mountpoint_entry.set_filename(mountpoint)
-				automount=self.profiles_info[self.profile.decode("utf-8")]["automount"]
+				#automount=self.profiles_info[self.profile.decode("utf-8")]["automount"]
+				automount=self.profiles_info[self.profile]["automount"]
 				self.automount_entry.set_active(automount)
 
 				try:
-					self.root_folder=self.profiles_info[self.profile.decode("utf-8")]["root_folder"]
+					#self.root_folder=self.profiles_info[self.profile.decode("utf-8")]["root_folder"]
+					self.root_folder=self.profiles_info[self.profile]["root_folder"]
 				except Exception as e:
 					self.root_folder=False
 
 				if self.root_folder:
 					self.gdrive_folder_label.show()
 					self.gdrive_folder_entry.show()
-					self.gdrive_folder_entry.set_text(self.profiles_info[self.profile.decode("utf-8")]["gdrive_folder"])
+					#self.gdrive_folder_entry.set_text(self.profiles_info[self.profile.decode("utf-8")]["gdrive_folder"])
+					self.gdrive_folder_entry.set_text(self.profiles_info[self.profile]["gdrive_folder"])
 					#self.gdrive_folder=self.gdrive_folder_entry.get_text()
 					self.edit_gdrive_folder_button.show()
 					self.edit_gdrive_folder_button.set_sensitive(True)
@@ -738,10 +742,13 @@ class ProfileBox(Gtk.VBox):
 		#ENCODING TO UNICODE
 		profile=self.profile_entry.get_text()
 
-		self.new_profile=profile.strip().decode("utf-8")
+		#self.new_profile=profile.strip().decode("utf-8")
+		self.new_profile=profile.strip()
 		email=self.email_entry.get_text()
 		self.new_email=email.strip()
-		self.new_mountpoint=self.mountpoint_entry.get_filename().decode("utf-8")
+		#self.new_mountpoint=self.mountpoint_entry.get_filename().decode("utf-8")
+		self.new_mountpoint=self.mountpoint_entry.get_filename()
+
 		self.new_automount=self.automount_entry.get_active()
 		
 
@@ -752,28 +759,27 @@ class ProfileBox(Gtk.VBox):
 			self.new_root_folder=self.root_folder_param_entry.get_state()
 			if self.new_root_folder:
 					try:
-						self.new_gdrive_folder=self.gdrive_folder_entry.get_text().decode("utf-8")
+						#self.new_gdrive_folder=self.gdrive_folder_entry.get_text().decode("utf-8")
+						self.new_gdrive_folder=self.gdrive_folder_entry.get_text()
 					except Exception as e:
-						print str(e)
+						print(str(e))
 						self.new_gdrive_folder=""	
 			else:
 				self.new_gdrive_folder=""	 
-	 
-	 	self.profile_msg.show()
-	 	self.profile_msg.set_name("MSG_LABEL")
-	 	self.profile_pbar.show()
-	 	self.init_threads()
-	 	if not self.check_form_t.launched:
-	 		self.profile_msg.set_text(_("Validating entered data..."))
-	 		GLib.timeout_add(100,self.pulsate_check_form)
+		self.profile_msg.show()
+		self.profile_msg.set_name("MSG_LABEL")
+		self.profile_pbar.show()
+		self.init_threads()
+		if not self.check_form_t.launched:
+			self.profile_msg.set_text(_("Validating entered data..."))
+			GLib.timeout_add(100,self.pulsate_check_form)
 
 	#def accept_add_profile_clicked		
 
 
 	def pulsate_check_form(self):
-
-	 	self.profile_pbar.pulse()
 		
+		self.profile_pbar.pulse()
 		if not self.check_form_t.launched:
 			self.check_form_t.start()
 			self.check_form_t.launched=True
@@ -835,8 +841,10 @@ class ProfileBox(Gtk.VBox):
 		#ENCODING TO UNICODE
 		profile=self.profile_entry.get_text()
 
-		new_profile=profile.strip().decode("utf-8")
-		new_mountpoint=self.mountpoint_entry.get_filename().decode("utf-8")
+		#new_profile=profile.strip().decode("utf-8")
+		new_profile=profile.strip()
+		#new_mountpoint=self.mountpoint_entry.get_filename().decode("utf-8")
+		new_mountpoint=self.mountpoint_entry.get_filename()
 				
 		check_form=self.core.LliurexGoogleDriveManager.check_mountpoint_folder(new_profile,new_mountpoint,self.edition)
 		

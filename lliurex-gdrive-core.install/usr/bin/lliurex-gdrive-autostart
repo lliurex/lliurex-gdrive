@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*
+
 import lliurexgdrive
 import os
 import subprocess
@@ -73,12 +75,12 @@ class LliurexGdriveAutostart:
 		if d_id==None:
 			d_id="lliurex-gdrive"
 
-		print d_id
+		print(d_id)
 		self.client_id=proxy.RegisterClient("lliurex-gdrive",d_id)
-		print self.client_id
+		print(self.client_id)
 		syslog.syslog(self.client_id)
 		proxy = self.session_bus.get_object('org.gnome.SessionManager',self.client_id)
-		print proxy
+		print(proxy)
 		self.cp_proxy=dbus.Interface(proxy,"org.gnome.SessionManager.ClientPrivate")
 		
 		self.cp_proxy.connect_to_signal("QueryEndSession",self.on_query_end_session)
