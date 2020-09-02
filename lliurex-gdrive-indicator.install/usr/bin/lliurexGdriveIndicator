@@ -240,7 +240,7 @@ class LliurexGdriveIndicator:
 										wdd=wm.add_watch(tmp_mountpoint,mask,rec=True)
 									
 					else:
-						if not os.path.basename(event.pathname)	not in self.main.blacklist_file:
+						if os.path.basename(event.pathname)	not in self.main.blacklist_file:
 							self.register_change(event)
 
 			#def process_IN_CLOSE_WRITE			
@@ -261,13 +261,15 @@ class LliurexGdriveIndicator:
 						state=os.stat(t)
 						
 					except Exception as e:
-						print(str(e))
 						t=t.split('trashinfo')
 						t=t[0]+'trashinfo'
 						state=os.stat(t)
 						
-
-					t=t.decode("utf-8")	
+					try:
+						if type(t) is bytes:
+							t=t.decode()
+					except:
+						pass	
 					access=datetime.datetime.fromtimestamp(state.st_mtime)
 					self.main.local_changes[t]=access
 
