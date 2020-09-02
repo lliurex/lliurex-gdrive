@@ -1,3 +1,10 @@
+lliurex-gdrive (0.3.44) bionic; urgency=medium
+
+  * Fixed bug when some file is deleted
+  * Fixed bug when in systray messages
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 02 Sep 2020 12:38:59 +0200
+
 lliurex-gdrive (0.3.43) bionic; urgency=medium
 
   * Migrated to python3
