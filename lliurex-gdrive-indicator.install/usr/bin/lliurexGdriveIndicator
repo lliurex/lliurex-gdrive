@@ -240,7 +240,7 @@ class LliurexGdriveIndicator:
 										wdd=wm.add_watch(tmp_mountpoint,mask,rec=True)
 									
 					else:
-						if not os.path.basename(event.pathname)	not in self.main.blacklist_file:
+						if os.path.basename(event.pathname)	not in self.main.blacklist_file:
 							self.register_change(event)
 
 			#def process_IN_CLOSE_WRITE			
@@ -261,13 +261,15 @@ class LliurexGdriveIndicator:
 						state=os.stat(t)
 						
 					except Exception as e:
-						print(str(e))
 						t=t.split('trashinfo')
 						t=t[0]+'trashinfo'
 						state=os.stat(t)
 						
-
-					t=t.decode("utf-8")	
+					try:
+						if type(t) is bytes:
+							t=t.decode()
+					except:
+						pass	
 					access=datetime.datetime.fromtimestamp(state.st_mtime)
 					self.main.local_changes[t]=access
 
@@ -674,14 +676,14 @@ class LliurexGdriveIndicator:
 		if not self.checking_status:
 			self.checking_status=True
 			self.init_connect_thread()
-			GLib.timeout_add(100,self.get_status_info,id)
+			GLib.timeout_add(100,self.get_status_info)
 
 		return True
 		
 		
 	#def check_status
 	
-	def get_status_info(self,id):
+	def get_status_info(self):
 		
 		if self.check_connect_t.is_alive():
 			return True
@@ -760,7 +762,9 @@ class LliurexGdriveIndicator:
 					numFiles_add=len(item['files_add'])
 				
 				if numFiles_up>0 or numFiles_rm>0 or numFiles_add>0:
-					message1=_('Changes in last 15 minutes in ')+p.encode("utf-8")+':\n'
+					if type(p) is bytes:
+						p=p.decode()
+					message1=_('Changes in last 15 minutes in ')+p+':\n'
 					message_up=""
 					message_rm=""
 					message_add=""		
@@ -776,7 +780,9 @@ class LliurexGdriveIndicator:
 								file_split=os.path.splitext(file)
 								if file_split[1]==".desktop":
 									file=file_split[0]
-								message_up=message_up + file.encode("utf-8") +'\n'
+								if type(file) is bytes:
+									file=file.decode()	
+								message_up=message_up + file +'\n'
 									
 						else:	
 							message_up= message_up + str(numFiles_up) + '\n'
@@ -793,7 +799,9 @@ class LliurexGdriveIndicator:
 								file_split=os.path.splitext(file)
 								if file_split[1]==".desktop":
 									file=file_split[0]
-								message_add=message_add +file.encode("utf-8") +'\n'
+								if type(file) is bytes:
+									file=file.decode()	
+								message_add=message_add +file +'\n'
 						else:
 								
 							message_add=message_add + str(numFiles_add) + '\n'
@@ -806,7 +814,9 @@ class LliurexGdriveIndicator:
 								file_split=os.path.splitext(file)
 								if file_split[1]==".desktop":
 									file=file_split[0]
-								message_rm=message_rm + file.encode("utf-8") +'\n'
+								if type(file) is bytes:
+									file=file.decode()	
+								message_rm=message_rm + file +'\n'
 						else:		
 							message_rm=message_rm +str(numFiles_rm)
 
