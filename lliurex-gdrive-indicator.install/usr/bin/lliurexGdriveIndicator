@@ -328,15 +328,26 @@ class LliurexGdriveIndicator:
 			info=self.item_status_info(status_info)
 			self.current_status[profile]=None
 				
+		
+		hbox=Gtk.HBox()
+		img=Gtk.Image()
+		img.set_from_file(info["img"])
 		label_item=profile	
+		'''
 		item=Gtk.ImageMenuItem()
 		item.set_label(label_item)
 		item.set_image(info["img"])
+		'''
+		label=Gtk.Label(label=label_item)
+		hbox.pack_start(img,False,False,0)
+		hbox.pack_end(label,False,False,0)
+		item=Gtk.MenuItem()
+		item.add(hbox)
 		item.set_tooltip_text(info["tooltip"])
 		item.profile=profile
 		item.size=False
 		item.status=True
-		item.set_always_show_image(True)
+		#item.set_always_show_image(True)
 		item.connect("activate",self.item_clicked,profile)
 		self.menu.insert(item,0)
 
@@ -392,39 +403,67 @@ class LliurexGdriveIndicator:
 			self.add_menu_item(profile,mountpoint)
 			
 			
-		item=Gtk.ImageMenuItem()
+		#item=Gtk.ImageMenuItem()
+
+		hbox=Gtk.HBox()
+		img=Gtk.Image.new_from_icon_name(Gtk.STOCK_PREFERENCES,Gtk.IconSize.MENU)
 		label_item=_("Open Lliurex GDrive")
+		'''
 		item.set_label(label_item)
 		img=Gtk.Image()
 		img.set_from_stock(Gtk.STOCK_PREFERENCES,Gtk.IconSize.MENU)
 		item.set_image(img)
 		item.set_always_show_image(True)
+		'''
+		label=Gtk.Label(label=label_item)
+		hbox.pack_start(img,False,False,0)
+		hbox.pack_end(label,False,False,0)
+		item=Gtk.MenuItem()
+		item.add(hbox)
 		item.connect("activate",self.open_gui)
 		item.profile=""
 		item.size=False
 		item.status=False
 		self.menu.append(item)
 
-		item=Gtk.ImageMenuItem()
+		#item=Gtk.ImageMenuItem()
+		hbox=Gtk.HBox()
+		img=Gtk.Image.new_from_icon_name("system-help",Gtk.IconSize.MENU)
 		label_item=_("Help")
+		'''
 		item.set_label(label_item)
 		img=Gtk.Image()
 		img.set_from_stock("system-help",Gtk.IconSize.MENU)
 		item.set_image(img)
 		item.set_always_show_image(True)
+		'''
+		label=Gtk.Label(label=label_item)
+		hbox.pack_start(img,False,False,0)
+		hbox.pack_end(label,False,False,0)
+		item=Gtk.MenuItem()
+		item.add(hbox)
 		item.connect("activate",self.help)
 		item.profile=""
 		item.size=False
 		item.status=False
 		self.menu.append(item)
 
+		'''
 		item=Gtk.ImageMenuItem()
 		img=Gtk.Image()
 		img.set_from_stock(Gtk.STOCK_CLOSE,Gtk.IconSize.MENU)
 		item.set_image(img)
 		item.set_always_show_image(True)
+		'''
+		hbox=Gtk.HBox()
+		img=Gtk.Image.new_from_icon_name(Gtk.STOCK_CLOSE,Gtk.IconSize.MENU)
 		label_item=_("Close")
-		item.set_label(label_item)
+		label=Gtk.Label(label=label_item)
+		hbox.pack_start(img,False,False,0)
+		hbox.pack_end(label,False,False,0)
+		item=Gtk.MenuItem()
+		item.add(hbox)
+		#item.set_label(label_item)
 		item.connect("activate",self.quit)
 		item.profile=""
 		item.size=False
@@ -499,7 +538,8 @@ class LliurexGdriveIndicator:
 			self.profile_clicked.append(profile)
 			id=self.generate_sync_threads(profile)
 			self.sp_cont[id]=0
-			self.sp_img[id]=Gtk.Image.new_from_file(SP1)
+			#self.sp_img[id]=Gtk.Image.new_from_file(SP1)
+			self.sp_img[id]=SP1
 			GLib.timeout_add(100,self.pulsate_check_sync,id,widget,profile)
 			
 		
@@ -511,29 +551,54 @@ class LliurexGdriveIndicator:
 			self.sp_cont[id]=0
 			
 		if self.sp_cont[id]==0:
+			'''
 			img=Gtk.Image.new_from_file(SP1)
 			self.sp_img[id]=img
+			'''
+			self.sp_img[id]=SP1
 		elif self.sp_cont[id]==10:
+			'''
 			img=Gtk.Image.new_from_file(SP2)
-			self.sp_img[id]=img			
+			self.sp_img[id]=img
+			'''
+			self.sp_img[id]=SP2
 		elif self.sp_cont[id]==20:
+			'''
 			img=Gtk.Image.new_from_file(SP3)
 			self.sp_img[id]=img
+			'''
+			self.sp_img[id]=SP3
 		elif self.sp_cont[id]==30:
+			'''
 			img=Gtk.Image.new_from_file(SP4)
 			self.sp_img[id]=img
+			'''
+			self.sp_img[id]=SP4
 		elif self.sp_cont[id]==40:
+			'''
 			img=Gtk.Image.new_from_file(SP5)
-			self.sp_img[id]=img	
+			self.sp_img[id]=img
+			'''
+			self.sp_img[id]=SP5
 		elif self.sp_cont[id]==50:
+			'''
 			img=Gtk.Image.new_from_file(SP6)
-			self.sp_img[id]=img	
+			self.sp_img[id]=img
+			'''
+			self.sp_img[id]=SP6
 		elif self.sp_cont[id]==60:
+			'''
 			img=Gtk.Image.new_from_file(SP7)
-			self.sp_img[id]=img	
+			self.sp_img[id]=img
+			'''
+			self.sp_img[id]=SP7
 		elif self.sp_cont[id]==70:
+			'''
 			img=Gtk.Image.new_from_file(SP8)
-			self.sp_img[id]=img				
+			self.sp_img[id]=img
+			'''
+			self.sp_img[id]=SP8
+				
 				
 	#def spinner_sync	
 			
@@ -542,7 +607,9 @@ class LliurexGdriveIndicator:
 		
 		if self.sync_threads[id]["thread"].is_alive():
 			self.spinner_sync(id)
-			widget.set_image(self.sp_img[id])
+			#widget.set_image(self.sp_img[id])
+			img_status=widget.get_children()[0].get_children()[0]
+			img_status.set_from_file(self.sp_img[id])
 			widget.set_tooltip_text(_("Applying changes..."))	
 			self.sp_cont[id]=self.sp_cont[id]+1
 			return True
@@ -574,9 +641,11 @@ class LliurexGdriveIndicator:
 					if item.size:
 						if item.profile==profile:
 							item.set_label(info["used_size"])
-				
+					if item.status:
+						item.get_children()[0].get_children()[0].set_from_file(info["img"])
+						
 			widget.set_tooltip_text(info["tooltip"])
-			widget.set_image(info["img"])	
+			#widget.set_image(info["img"])	
 			self.sync_threads.pop(id)
 			self.sp_cont.pop(id)
 			self.sp_img.pop(id)
@@ -653,17 +722,20 @@ class LliurexGdriveIndicator:
 		used=status_info["used"]
 
 		if status_info['status']==None:
-			img=Gtk.Image.new_from_file(MOUNT_WARNING_IMAGE)
+			#img=Gtk.Image.new_from_file(MOUNT_WARNING_IMAGE)
+			img=MOUNT_WARNING_IMAGE
 			tooltip=_("Without connection. Clicked to update")
 			used_size=_("Used: not available")
 		
 		elif status_info["status"]:
-			img=Gtk.Image.new_from_file(MOUNT_ON_IMAGE)
+			#img=Gtk.Image.new_from_file(MOUNT_ON_IMAGE)
+			img=MOUNT_ON_IMAGE
 			tooltip=_("Mounted. Clicked to dismount now")
 			used_size=_("Used: %s of %s")%(used,size)
 		
 		else:
-			img=Gtk.Image.new_from_file(MOUNT_OFF_IMAGE)
+			#img=Gtk.Image.new_from_file(MOUNT_OFF_IMAGE)
+			img=MOUNT_OFF_IMAGE
 			tooltip=_("Dismounted. Clicked to mount now")
 			used_size=_("Used: not available")	
 
@@ -714,7 +786,9 @@ class LliurexGdriveIndicator:
 							item.set_label(info["used_size"])
 						if item.status:
 							item.set_tooltip_text(info["tooltip"])
-							item.set_image(info["img"])
+							#item.set_image(info["img"])
+							item.get_children()[0].get_children()[0].set_from_file(info["img"])
+
 		
 		#self.result_connect_threads.pop(id)		
 		self.notify_changes()
@@ -1056,6 +1130,6 @@ class LliurexGdriveIndicator:
 if __name__=="__main__":
 	
 	lliurexgdrive=LliurexGdriveIndicator("gdrive-indicator")
-	GObject.threads_init()
+	#GObject.threads_init()
 	Gtk.main()
 	
