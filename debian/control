@@ -1,0 +1,46 @@
+Source: lliurex-gdrive
+Section: web
+Priority: optional
+Maintainer: LliureX Team <lliurex@gva.es>
+Build-Depends: debhelper (>=10),
+               llxsrchelper, 
+               dh-python,
+               python3-all,
+               python3-setuptools,
+	       python3-poinstaller
+Standards-Version: 4.1.2
+Homepage: http://lliurex.net
+X-Python-Version: >= 2.6
+
+Package: python3-lliurexgdrive
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, google-drive-ocamlfuse(>=0.6.21-0ubuntu1~ubuntu16.04.1)
+Description: Python library for lliurex-gdrive; pre-actions and postactions
+ Library for lliurex-gdrive
+
+Package: lliurex-gdrive-core
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python3-lliurexgdrive (= ${binary:Version})
+Description: Contains desktop file, banner for zero-center and auto startup script
+ Some files to support lliurex-gdrive:desktop, banner for zero-center and auto startup script
+
+Package: lliurex-gdrive-gui
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python3, lliurex-gdrive-core (= ${binary:Version}), python3-psutil
+Recommends: lliurex-gdrive-indicator (= ${binary:Version}),  lliurex-gdrive-zerocenter-files (= ${binary:Version}),
+Description: Graphical interface to google drive
+ Interface to manager google drive accounts.
+
+Package: lliurex-gdrive-indicator
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, lliurex-gdrive-core (= ${binary:Version}), lliurex-gdrive-gui (= ${binary:Version}), python3, python3-notify2, python3-pyinotify, gir1.2-appindicator3-0.1,python3-tk
+Description: Indicator menu to lliurex-google-drive
+ Indicator menu to lliurex-google-drive.
+ 
+Package: lliurex-gdrive-zerocenter-files
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, zero-center 
+Description: Files to zero-center 
+ Provides files to zero-center: app, zmd and banner files.
+
+

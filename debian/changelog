@@ -1,0 +1,236 @@
+lliurex-gdrive (0.3.44) bionic; urgency=medium
+
+  * Fixed bug when some file is deleted
+  * Fixed bug when in systray messages
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 02 Sep 2020 12:38:59 +0200
+
+lliurex-gdrive (0.3.43) bionic; urgency=medium
+
+  * Migrated to python3
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 03 Feb 2020 14:03:40 +0100
+
+lliurex-gdrive (0.3.42) bionic; urgency=medium
+
+  * Updated link to help
+  * Improved performance of systray icon
+  * Added icons for google-drive documents mimetypes	
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 05 Sep 2019 13:40:23 +0200
+
+lliurex-gdrive (0.3.41) bionic; urgency=medium
+
+  * Adding ca@valencia
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Fri, 26 Jul 2019 11:26:45 +0200
+
+lliurex-gdrive (0.3.40) bionic; urgency=medium
+
+  * Fixed valencian translations
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 17 Jun 2019 13:38:45 +0200
+
+lliurex-gdrive (0.3.39) bionic; urgency=medium
+
+  * Fixed indicator icon
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 13 Jun 2019 13:05:42 +0200
+
+lliurex-gdrive (0.3.38) bionic; urgency=medium
+
+  * Changed app and indicator icon
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 13 Jun 2019 09:01:58 +0200
+
+lliurex-gdrive (0.3.37) bionic; urgency=medium
+
+  * Added service to dismount when session end
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 22 May 2019 12:46:14 +0200
+
+lliurex-gdrive (0.3.36) bionic; urgency=medium
+
+  * Fixed root folder utility
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 19 Nov 2018 09:40:14 +0100
+
+lliurex-gdrive (0.3.35) bionic; urgency=medium
+
+  * Redesign of the gui to apply new style
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 16 Nov 2018 13:32:38 +0100
+
+lliurex-gdrive (0.3.34) bionic; urgency=medium
+
+  * Initial release for bionic
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 01 Oct 2018 14:02:17 +0200
+
+lliurex-gdrive (0.3.24) xenial; urgency=medium
+
+  * Added access to the LliureX wiki article
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 19 Jul 2018 13:13:37 +0200
+
+lliurex-gdrive (0.3.23) xenial; urgency=medium
+
+  * Fixed function to remove tmp bin browser
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 31 May 2018 13:19:47 +0200
+
+lliurex-gdrive (0.3.22) xenial; urgency=medium
+
+  * Added check: Chromium as default browser
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 31 May 2018 12:59:06 +0200
+
+lliurex-gdrive (0.3.21) xenial; urgency=medium
+
+  * Updated categorization in zero-center
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 27 Apr 2018 12:57:20 +0200
+
+lliurex-gdrive (0.3.20) xenial; urgency=medium
+
+  * Changed command to open folder from the indicator
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 19 Apr 2018 09:04:48 +0200
+
+lliurex-gdrive (0.3.19) xenial; urgency=medium
+
+  * Fix bug when the validation detects errors
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 19 Apr 2018 08:33:31 +0200
+
+lliurex-gdrive (0.3.18) xenial; urgency=medium
+
+  * Some changes to allow installation in non-LliureX distros
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 21 Mar 2018 15:32:06 +0100
+
+lliurex-gdrive (0.3.17) xenial; urgency=medium
+
+  * Added function to avoid ghost notifications
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 09 Jan 2018 13:28:24 +0100
+
+lliurex-gdrive (0.3.16) xenial; urgency=medium
+
+  * New feature: Notification of changes in documents
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 18 Dec 2017 10:37:00 +0100
+
+lliurex-gdrive (0.3.15) xenial; urgency=medium
+
+  * New feature: Sync specific folder
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 16 Nov 2017 12:50:02 +0100
+
+lliurex-gdrive (0.3.14) xenial; urgency=medium
+
+  * Fix translations
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 10 Nov 2017 10:34:12 +0100
+
+lliurex-gdrive (0.3.13) xenial; urgency=medium
+
+  * Eliminate zero-dev and llx-dev depends
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 02 Nov 2017 11:35:41 +0100
+
+lliurex-gdrive (0.3.12) xenial; urgency=medium
+
+  * Improved autostart script
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 20 Sep 2017 17:35:48 +0200
+
+lliurex-gdrive (0.3.11) xenial; urgency=medium
+
+  * Improved mount point verification (blanks in path)
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 13 Sep 2017 10:21:43 +0200
+
+lliurex-gdrive (0.3.10) xenial; urgency=medium
+
+  * Improved mount point verification (empty folder and owner)
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 10 Aug 2017 08:55:26 +0200
+
+lliurex-gdrive (0.3.9) xenial; urgency=medium
+
+  * Fix config file in 32 bits
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 08 Aug 2017 08:20:40 +0200
+
+lliurex-gdrive (0.3.8) xenial; urgency=medium
+
+  * Updated metainfo
+  * Fix endsession script
+  * Change path for the gui lock token and indicator
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 02 Aug 2017 12:16:43 +0200
+
+lliurex-gdrive (0.3.7) xenial; urgency=medium
+
+  * Fix bug in indicator class
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 25 Jul 2017 12:13:05 +0200
+
+lliurex-gdrive (0.3.6) xenial; urgency=medium
+
+  * Show notification when cache is updated
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 24 Jul 2017 08:58:30 +0200
+
+lliurex-gdrive (0.3.5) xenial; urgency=medium
+
+  * Delete cache when mountpoint is dismounted
+  * Add option in menu indicator to delete cache
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 21 Jul 2017 10:33:09 +0200
+
+lliurex-gdrive (0.3.4) xenial; urgency=medium
+
+  * removed deprecated locale
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 22 Jun 2017 09:10:44 +0200
+
+lliurex-gdrive (0.3.3) xenial; urgency=medium
+
+  * Added metainfo
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 11 May 2017 12:57:35 +0200
+
+lliurex-gdrive (0.3.2) xenial; urgency=medium
+
+  * Fix endsession script
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 26 Apr 2017 09:23:25 +0200
+
+lliurex-gdrive (0.3.1) xenial; urgency=medium
+
+  * Add control to launch indicator only if there are profiles
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 18 Apr 2017 17:59:30 +0200
+
+lliurex-gdrive (0.3) xenial; urgency=medium
+
+  * Add valencian translations
+  * Fix autostart script
+  * Change config file to show shared folders/files
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 03 Apr 2017 09:59:37 +0200
+
+lliurex-gdrive (0.2) xenial; urgency=medium
+
+  * Fix po files
+  * Add end session dismount script
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 30 Mar 2017 10:27:37 +0200
+
+lliurex-gdrive (0.1) xenial; urgency=medium
+
+  * Initial release.
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 27 Mar 2017 11:22:42 +0200
