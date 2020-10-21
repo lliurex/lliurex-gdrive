@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-11-16 12:51+0100\n"
-"PO-Revision-Date: 2018-11-16 13:14+0100\n"
+"PO-Revision-Date: 2020-10-21 11:26+0200\n"
 "Last-Translator: Pilar Embid Giner <embid_mar@gva.es>\n"
 "Language-Team: LliureX\n"
 "Language: es\n"
@@ -359,9 +359,3 @@ msgstr "-Fitxers afegits: "
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:791
 msgid "-Files deleted: "
 msgstr "-Fitxers suprimits: "
-
-#~ msgid "SYNC PROFILES"
-#~ msgstr "SINC PERFILS"
-
-#~ msgid "Error: unable to mount mount point"
-#~ msgstr "Error: No s'ha pogut muntar el punt de muntatge"

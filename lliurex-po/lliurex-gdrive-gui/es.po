@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-11-16 12:51+0100\n"
-"PO-Revision-Date: 2018-11-16 12:52+0100\n"
+"PO-Revision-Date: 2020-10-21 11:26+0200\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "Language: es\n"
@@ -357,19 +357,3 @@ msgstr "-Archivos nuevos: "
 #: ../lliurex-gdrive-indicator.install/usr/bin/lliurexGdriveIndicator:791
 msgid "-Files deleted: "
 msgstr "-Archivos eliminados: "
-
-#, fuzzy
-#~| msgid "Profile:"
-#~ msgid "Profile Options"
-#~ msgstr "Perfil:"
-
-#, fuzzy
-#~| msgid "Add profile"
-#~ msgid "add_profile"
-#~ msgstr "Añadir perfil"
-
-#~ msgid "SYNC PROFILES"
-#~ msgstr "PERFILES SINCRONIZADOS"
-
-#~ msgid "Error: unable to mount mount point"
-#~ msgstr "Error: imposible montar el punto de montaje"
