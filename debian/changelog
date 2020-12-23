@@ -1,3 +1,9 @@
+lliurex-gdrive (0.3.46) bionic; urgency=medium
+
+  * Updated link to the wiki
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 23 Dec 2020 16:07:58 +0100
+
 lliurex-gdrive (0.3.45) bionic; urgency=medium
 
   * Fixed po files
