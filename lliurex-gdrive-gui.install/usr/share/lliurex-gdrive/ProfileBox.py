@@ -57,6 +57,9 @@ class ProfileBox(Gtk.VBox):
 		#self.profiles_list_label=builder.get_object("profiles_list_label")
 		self.profile_list_box=builder.get_object("profile_list_box")
 		self.profile_list_vp=builder.get_object("profile_list_viewport")
+		self.msg_box=builder.get_object("msg_box")
+		self.msg_img_error=builder.get_object("msg_img_error")
+		self.msg_img_ok=builder.get_object("msg_img_ok")
 		self.msg_label=builder.get_object("msg_label")
 
 		image = Gtk.Image()
@@ -112,6 +115,9 @@ class ProfileBox(Gtk.VBox):
 		self.gdrive_folder_entry.set_ellipsize(Pango.EllipsizeMode.START)
 		self.edit_gdrive_folder_button=builder.get_object("edit_gdrive_folder_button")
 
+		self.profile_msg_box=builder.get_object("profile_msg_box")
+		self.profile_msg_img_error=builder.get_object("profile_msg_img_error")
+		self.profile_msg_img_ok=builder.get_object("profile_msg_img_ok")
 		self.profile_msg=builder.get_object("profile_msg")
 		self.profile_pbar=builder.get_object("profile_pbar")
 		self.accept_add_profile_button=builder.get_object("accept_add_profile_button")
@@ -201,19 +207,19 @@ class ProfileBox(Gtk.VBox):
 
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),self.style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 		#self.profiles_list_label.set_name("OPTION_LABEL")
+		self.profile_list_vp.set_name("LIST_BOX")
 		self.profile_label.set_name("OPTION_LABEL")
 		self.email_label.set_name("OPTION_LABEL")
 		self.mountpoint_label.set_name("OPTION_LABEL")
 		self.automount_label.set_name("OPTION_LABEL")
-		self.msg_label.set_name("MSG_LABEL")
-		self.profile_msg.set_name("MSG_LABEL")
+		self.msg_label.set_name("FEEDBACK_LABEL")
+		self.profile_msg.set_name("FEEDBACK_LABEL")
 		self.root_folder_param_label.set_name("OPTION_LABEL")
 		self.gdrive_combobox_label.set_name("OPTION_LABEL")
 		self.gdrive_folder_label.set_name("OPTION_LABEL")
 		self.profile_entry.set_name("CUSTOM-ENTRY")
 		self.email_entry.set_name("CUSTOM-ENTRY")
 		self.gdrive_folder_entry.set_name("CUSTOM-ENTRY")
-		
 			
 	#def set-css_info
 	
@@ -248,12 +254,13 @@ class ProfileBox(Gtk.VBox):
 	def load_info(self,info):
 		
 		self.profiles_info=info
+		count=len(self.profiles_info)
 		for item in self.profiles_info:
 			profile=item
 			email=self.profiles_info[item]["email"]
 			mountpoint=self.profiles_info[item]["mountpoint"]
-			self.new_profile_button(profile,email,mountpoint)
-			
+			self.new_profile_button(profile,email,mountpoint,count)
+			count-=1
 	
 	#def load_info()		
 
@@ -334,6 +341,7 @@ class ProfileBox(Gtk.VBox):
 	def add_new_profile_button_clicked(self,widget):
 
 		self.edition=False
+		self.manage_msg_box(True)
 		self.msg_label.set_text("")
 		is_chromium_favourite=self.core.LliurexGoogleDriveManager.is_chromium_favourite_browser()
 		changed_browser=True
@@ -361,7 +369,8 @@ class ProfileBox(Gtk.VBox):
 
 		else:	
 			msg_error=self.get_msg(21)
-			self.msg_label.set_name("MSG_ERROR_LABEL")
+			#self.msg_label.set_name("MSG_ERROR_LABEL")
+			self.manage_msg_box(False,True)
 			self.msg_label.set_text(msg_error)
 
 	#def add_new_profile_button_clicked	
@@ -381,13 +390,13 @@ class ProfileBox(Gtk.VBox):
 				self.email_entry.set_text("")
 				self.mountpoint_entry.set_filename(os.environ["HOME"])
 				self.automount_entry.set_active(False)
-				self.profile_msg.set_text("")
+				#self.profile_msg.set_text("")
 		
 
 				self.init_threads()
 				
 				self.msg_label.set_text("")
-				self.profile_msg.hide()
+				#self.profile_msg.hide()
 				self.profile_pbar.hide()
 				self.init_profile_dialog_button()
 				self.new_profile_window.show()
@@ -395,7 +404,8 @@ class ProfileBox(Gtk.VBox):
 			else:
 				self.core.LliurexGoogleDriveManager.remove_chromium_tmpbin()		
 				msg_error=self.get_msg(8)
-				self.msg_label.set_name("MSG_ERROR_LABEL")
+				#self.msg_label.set_name("MSG_ERROR_LABEL")
+				self.manage_msg_box(False,True)
 				self.msg_label.set_text(msg_error)		
 		
 		return False	
@@ -403,9 +413,9 @@ class ProfileBox(Gtk.VBox):
 
 	#def add_new_profile_button_clicked	
 
-	def delete_profile_clicked(self,widget,event,hbox):
+	def delete_profile_clicked(self,widget,event,vbox):
 
-		popover=hbox.get_children()[5].popover.hide()
+		popover=vbox.get_children()[0].get_children()[5].popover.hide()
 
 		dialog = Gtk.MessageDialog(None,0,Gtk.MessageType.WARNING, Gtk.ButtonsType.YES_NO, "Lliurex GDrive")
 		dialog.format_secondary_text(_("Do you want delete the profile?"))
@@ -414,7 +424,7 @@ class ProfileBox(Gtk.VBox):
 		
 
 		if response==Gtk.ResponseType.YES:
-			profile=hbox.get_children()[1].get_text().split("\n")[0]
+			profile=vbox.get_children()[0].get_children()[1].get_text().split("\n")[0]
 			#ENCODING TO UNICODE			
 			#profile=profile.decode("utf-8")
 			self.delete_profile_t=threading.Thread(target=self.delete_profile,args=(profile,))
@@ -428,11 +438,11 @@ class ProfileBox(Gtk.VBox):
 			self.delete_profile_t.launched=True
 			self.core.lgd.check_plabel.set_text(_("Applying changes..."))
 			self.core.lgd.check_window.show()
-			GLib.timeout_add(100,self.pulsate_delete_profile,profile,hbox)
+			GLib.timeout_add(100,self.pulsate_delete_profile,profile,vbox)
 
 	# def delete_profile_clicked
 		
-	def pulsate_delete_profile(self,profile,hbox):
+	def pulsate_delete_profile(self,profile,vbox):
 
 			if self.delete_profile_t.is_alive():
 				self.core.lgd.check_pbar.pulse()
@@ -442,10 +452,13 @@ class ProfileBox(Gtk.VBox):
 				self.msg_label.show()
 				self.core.lgd.check_window.hide()
 				if self.delete["result"]:
-					self.msg_label.set_name("MSG_LABEL")
-					self.profile_list_box.remove(hbox)
+					#self.msg_label.set_name("MSG_LABEL")
+					self.profile_list_box.remove(vbox)
+					self.draw_list_separator()
+					self.manage_msg_box(False)
 				else:
-					self.msg_label.set_name("MSG_ERROR_LABEL")
+					self.manage_msg_box(False,True)
+					#self.msg_label.set_name("MSG_ERROR_LABEL")
 				
 				msg_text=self.get_msg(self.delete["code"])
 				self.msg_label.set_text(msg_text)
@@ -464,7 +477,7 @@ class ProfileBox(Gtk.VBox):
 
 	def sync_profile_clicked(self,button,hbox):
 
-		self.msg_label.set_text("")
+		self.manage_msg_box(True)
 		self.sync_profile_t=threading.Thread(target=self.sync_profile,args=(hbox,))
 		self.sync_profile_t.daemon=True
 		GObject.threads_init()
@@ -487,12 +500,14 @@ class ProfileBox(Gtk.VBox):
 			self.core.lgd.check_window.hide()
 			if self.status_mod["result"]:
 				msg_text=self.get_msg(self.status_mod["code"])
-				self.msg_label.set_name("MSG_LABEL")
+				#self.msg_label.set_name("MSG_LABEL")
+				self.manage_msg_box(False)
 				self.msg_label.set_text(msg_text)
 				
 			else:
 				msg_text=self.get_msg(self.status_mod["code"])
-				self.msg_label.set_name("MSG_ERROR_LABEL")
+				#self.msg_label.set_name("MSG_ERROR_LABEL")
+				self.manage_msg_box(False,True)
 				self.msg_label.set_text(msg_text)	
 			
 
@@ -521,21 +536,23 @@ class ProfileBox(Gtk.VBox):
 		
 	#def sync_profile	
 
-	def edit_profile_clicked(self,widget,event,hbox):
+	def edit_profile_clicked(self,widget,event,vbox):
 
-		popover=hbox.get_children()[5].popover.hide()
+		self.manage_profile_msg_box(True)
+
+		popover=vbox.get_children()[0].get_children()[5].popover.hide()
 		self.edition=True
 		self.read=False
 		self.core.lgd.check_plabel.set_text(_("Checking connection to google..."))
 		self.core.lgd.check_window.show()
 		self.init_threads()
 		self.check_connection_t.start()
-		GLib.timeout_add(100,self.pulsate_edit_connection,hbox)
+		GLib.timeout_add(100,self.pulsate_edit_connection,vbox)
 
 		
 	#def edit_profile_clicked
 
-	def pulsate_edit_connection(self,hbox):
+	def pulsate_edit_connection(self,vbox):
 
 		if self.check_connection_t.is_alive():
 				#self.disable_entry_profile_dialog()
@@ -549,7 +566,7 @@ class ProfileBox(Gtk.VBox):
 			if self.connection:
 				self.stack.set_visible_child_name("edit")
 
-				self.profile_to_edit=hbox		
+				self.profile_to_edit=vbox.get_children()[0]		
 				self.profile=self.profile_to_edit.get_children()[1].get_text().split("\n")[0]
 				self.profile_entry.set_text(self.profile)
 				email=self.profile_to_edit.get_children()[1].get_text().split("\n")[1]
@@ -585,7 +602,7 @@ class ProfileBox(Gtk.VBox):
 
 				self.init_threads()
 
-				self.profile_msg.hide()
+				#self.profile_msg.hide()
 				self.profile_pbar.hide()
 				self.msg_label.set_text("")
 				self.init_profile_dialog_button()
@@ -593,7 +610,8 @@ class ProfileBox(Gtk.VBox):
 
 			else:		
 				msg_text=self.get_msg(8)
-				self.msg_label.set_name("MSG_ERROR_LABEL")
+				#self.msg_label.set_name("MSG_ERROR_LABEL")
+				self.manage_msg_box(False,True)				
 				self.msg_label.set_text(msg_text)		
 		return False
 
@@ -605,8 +623,9 @@ class ProfileBox(Gtk.VBox):
 
 	#def check_connection	
 
-	def new_profile_button(self,profile_name,email,mountpoint):
+	def new_profile_button(self,profile_name,email,mountpoint,count=1):
 		
+		profile_vbox=Gtk.VBox()
 		hbox=Gtk.HBox()
 		profile_image=Gtk.Image.new_from_file(PROFILE_IMAGE)
 		profile_image.set_margin_left(10)
@@ -637,7 +656,7 @@ class ProfileBox(Gtk.VBox):
 		manage_profile.set_halign(Gtk.Align.CENTER)
 		manage_profile.set_valign(Gtk.Align.CENTER)
 		manage_profile.set_name("EDIT_ITEM_BUTTON")
-		manage_profile.connect("clicked",self.manage_profile_options,hbox)
+		manage_profile.connect("clicked",self.manage_profile_options,profile_vbox)
 		manage_profile.set_tooltip_text(_("Manage profile"))
 
 		popover = Gtk.Popover()
@@ -648,7 +667,7 @@ class ProfileBox(Gtk.VBox):
 		edit_box.set_margin_right(10)
 		edit_eb=Gtk.EventBox()
 		edit_eb.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK | Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.LEAVE_NOTIFY_MASK)
-		edit_eb.connect("button-press-event", self.edit_profile_clicked,hbox)
+		edit_eb.connect("button-press-event", self.edit_profile_clicked,profile_vbox)
 		edit_eb.connect("motion-notify-event", self.mouse_over_popover)
 		edit_eb.connect("leave-notify-event", self.mouse_exit_popover)
 		edit_label=Gtk.Label()
@@ -661,7 +680,7 @@ class ProfileBox(Gtk.VBox):
 		delete_box.set_margin_right(10)
 		delete_eb=Gtk.EventBox()
 		delete_eb.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK | Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.LEAVE_NOTIFY_MASK)
-		delete_eb.connect("button-press-event", self.delete_profile_clicked,hbox)
+		delete_eb.connect("button-press-event", self.delete_profile_clicked,profile_vbox)
 		delete_eb.connect("motion-notify-event", self.mouse_over_popover)
 		delete_eb.connect("leave-notify-event", self.mouse_exit_popover)
 		delete_label=Gtk.Label()
@@ -706,15 +725,41 @@ class ProfileBox(Gtk.VBox):
 		hbox.pack_end(mount,False,False,10)
 		hbox.show_all()
 		hbox.set_name("PROFILE_BOX")
-		self.profile_list_box.pack_start(hbox,False,False,5)
-		self.profile_list_box.queue_draw()
 		hbox.queue_draw()
-		
+
+		list_separator=Gtk.Separator()
+		list_separator.set_margin_left(52)
+		list_separator.set_margin_right(10)
+
+
+		if count!=1:
+			list_separator.set_name("SEPARATOR")
+		else:
+			list_separator.set_name("WHITE_SEPARATOR")
+
+		profile_vbox.pack_start(hbox,False,False,0)
+		profile_vbox.pack_end(list_separator,False,False,0)
+		profile_vbox.show_all()
+		self.profile_list_box.pack_start(profile_vbox,False,False,0)
+		self.profile_list_box.queue_draw()
+		self.profile_list_box.set_valign(Gtk.Align.FILL)
+		profile_vbox.queue_draw()
+	
 	#def new_profile_button
 
+	def draw_list_separator(self):
+
+		count=len(self.profile_list_box)
+
+		for item in self.profile_list_box:
+			if count!=1:
+				item.get_children()[1].set_name("SEPARATOR")
+			else:
+				item.get_children()[1].set_name("WHITE_SEPARATOR")
+			count-=1	
+
+
 	def item_status_info(self,status_info):
-	
-		
 
 		if status_info==None:
 			img=Gtk.Image.new_from_file(MOUNT_ON_IMAGE)
@@ -736,6 +781,7 @@ class ProfileBox(Gtk.VBox):
 
 	def accept_add_profile_clicked(self,widget):
 
+		self.manage_profile_msg_box(True)
 		self.disable_entry_profile_dialog()
 		self.accept_add_profile_button.hide()
 		self.cancel_add_profile_button.hide()
@@ -766,8 +812,8 @@ class ProfileBox(Gtk.VBox):
 						self.new_gdrive_folder=""	
 			else:
 				self.new_gdrive_folder=""	 
-		self.profile_msg.show()
-		self.profile_msg.set_name("MSG_LABEL")
+		#self.profile_msg.show()
+		#self.profile_msg.set_name("MSG_LABEL")
 		self.profile_pbar.show()
 		self.init_threads()
 		if not self.check_form_t.launched:
@@ -795,7 +841,7 @@ class ProfileBox(Gtk.VBox):
 				self.profiles_info[self.new_profile]["root_folder"]=self.new_root_folder
 				self.profiles_info[self.new_profile]["gdrive_folder"]=self.new_gdrive_folder
 			
-				self.profile_msg.set_name("MSG_LABEL")
+				#self.profile_msg.set_name("MSG_LABEL")
 				if not self.edition:
 					if not self.create_profile_t.launched:
 						self.profile_msg.set_text(_("Connecting with google to get account access..."))
@@ -812,8 +858,9 @@ class ProfileBox(Gtk.VBox):
 						GLib.timeout_add(100,self.pulsate_edit_profile)	
 			else:
 				self.profile_pbar.hide()
-				self.profile_msg.set_name("MSG_ERROR_LABEL")
+				#self.profile_msg.set_name("MSG_ERROR_LABEL")
 				#self.profile_msg.set_text(check_form["msg"])
+				self.manage_profile_msg_box(False,True)
 				self.profile_msg.set_text(self.get_msg(self.check_form_result["code"]))
 				self.enable_entry_profile_dialog()
 				self.init_profile_dialog_button()
@@ -836,7 +883,7 @@ class ProfileBox(Gtk.VBox):
 
 	def check_mountpoint_folder(self,widget):
 
-	
+		self.manage_profile_msg_box(True)
 		self.disable_entry_profile_dialog()
 		#ENCODING TO UNICODE
 		profile=self.profile_entry.get_text()
@@ -849,50 +896,19 @@ class ProfileBox(Gtk.VBox):
 		check_form=self.core.LliurexGoogleDriveManager.check_mountpoint_folder(new_profile,new_mountpoint,self.edition)
 		
 		if not check_form["result"]:
-			self.profile_msg.show()
-			self.profile_msg.set_name("MSG_ERROR_LABEL")
+			#self.profile_msg.show()
+			#self.profile_msg.set_name("MSG_ERROR_LABEL")
+			self.manage_profile_msg_box(False,True)
 			self.profile_msg.set_text(self.get_msg(check_form["code"]))
 			
+		
 		else:
-			self.profile_msg.hide()	
-
+			self.manage_profile_msg_box(True)
+			#self.profile_msg.set_text("")	
+		
 		self.enable_entry_profile_dialog()	
 
 	#def check_mountpoint_folder	
-
-	'''	
-	def check_profile_info(self):
-
-		msg_check=""
-
-		check_form=self.core.LliurexGoogleDriveManager.check_profile_info(self.new_profile,self.new_mountpoint,self.edition)
-
-		
-		if not check_form["result"]:
-			if check_form["code"]==1:
-				msg_check=_("You must indicate a profile")
-
-			elif check_form["code"]==2:
-				msg_check=_("Profile can not contain blanks")
-
-			elif check_form["code"]==3 :
-				msg_check=_("Profile already exists")
-			
-			elif check_form["code"]==4:
-				msg_check=_("Mount point already used by another profile")	
-
-			elif check_form["code"]==5:
-				msg_check=_("The mount point must be an empty folder")	
-
-			elif check_form["code"]==6:
-				msg_check=_("Mount point is not owned by user")	
-
-
-		return {"result":check_form["result"],"msg":msg_check}
-
-	#def check_profile_info	
-
-	'''	
 
 	def pulsate_add_profile(self):
 
@@ -900,15 +916,13 @@ class ProfileBox(Gtk.VBox):
 		self.profile_pbar.pulse()
 		
 		if not self.create_profile_t.launched:
-			#self.accept_add_profile_button.hide()
-			#self.cancel_add_profile_button.hide()
-		
+	
 			self.create_profile_t.start()
 			self.create_profile_t.launched=True
 
 		if not self.create_profile_t.is_alive():
 			if not self.create_mountpoint_t.launched:
-				self.profile_msg.set_name("MSG_LABEL")
+				#self.profile_msg.set_name("MSG_LABEL")
 				self.profile_msg.set_text(_("Creating profile... "))
 				self.create_mountpoint_t.start()
 				self.create_mountpoint_t.launched=True
@@ -918,12 +932,15 @@ class ProfileBox(Gtk.VBox):
 				if self.create_result["result"]:
 						self.initial_connection=True
 						self.new_profile_button(self.new_profile,self.new_email,self.new_mountpoint)
+						self.draw_list_separator()
 						self.profile_msg.set_text(_("Profile created successfully"))
+						self.manage_profile_msg_box(False)
 						self.change_cancel_button()
 						
 				else:
 					msg_text=self.get_msg(self.create_result["code"])
-					self.profile_msg.set_name("MSG_ERROR_LABEL")
+					#self.profile_msg.set_name("MSG_ERROR_LABEL")
+					self.manage_profile_msg_box(False,True)
 					self.profile_msg.set_text(msg_text)
 					self.cancel_add_profile_button.show()
 					
@@ -1029,7 +1046,8 @@ class ProfileBox(Gtk.VBox):
 				child.kill()
 				self.create_profile_t.terminate()
 				self.core.LliurexGoogleDriveManager.remove_chromium_tmpbin()		
-				self.profile_msg.set_name("MSG_ERROR_LABEL")
+				#self.profile_msg.set_name("MSG_ERROR_LABEL")
+				self.manage_profile_msg_box(False,True)
 				self.profile_msg.set_text(_("Error getting authorization"))
 
 		return True	
@@ -1055,22 +1073,22 @@ class ProfileBox(Gtk.VBox):
 
 		if not self.edit_profile_t.launched:
 			
-			#self.accept_add_profile_button.hide()
-			#self.cancel_add_profile_button.hide()
 			self.edit_profile_t.start()
 			self.edit_profile_t.launched=True
 
 		if self.edit_profile_t.done:
 			self.profile_pbar.hide()
 			if self.edit_result["result"]:
-				self.profile_msg.set_name("MSG_LABEL")
+				#self.profile_msg.set_name("MSG_LABEL")
+				self.manage_profile_msg_box(False)
 				self.profile_to_edit.get_children()[3].set_text(self.new_mountpoint)
 				self.profiles_info=self.core.LliurexGoogleDriveManager.profiles_config.copy()	
 				self.change_cancel_button()
 			
 			else:
 				
-				self.profile_msg.set_name("MSG_ERROR_LABEL")
+				#self.profile_msg.set_name("MSG_ERROR_LABEL")
+				self.manage_profile_msg_box(False,True)
 				self.cancel_add_profile_button.show()
 
 			msg_text=self.get_msg(self.edit_result["code"])
@@ -1094,6 +1112,7 @@ class ProfileBox(Gtk.VBox):
 
 	def cancel_add_profile_clicked(self,widget):
 		
+		self.manage_profile_msg_box(True)
 		self.core.LliurexGoogleDriveManager.remove_chromium_tmpbin()		
 		self.new_profile_window.hide()
 	
@@ -1102,6 +1121,7 @@ class ProfileBox(Gtk.VBox):
 	
 	def root_folder_clicked(self,widget,event):
 
+		self.manage_profile_msg_box(True)
 		if self.root_folder_param_entry.get_active():
 			if not self.root_folder:
 	
@@ -1125,7 +1145,7 @@ class ProfileBox(Gtk.VBox):
 
 			if not self.read_mountpoint_t.launched:
 				self.disable_entry_profile_dialog()
-				self.profile_msg.set_name("MSG_LABEL")
+				#self.profile_msg.set_name("MSG_LABEL")
 				self.profile_msg.show()
 				self.profile_msg.set_text(_("Getting folders from Google Drive profile ..."))
 				self.profile_pbar.show()
@@ -1155,7 +1175,7 @@ class ProfileBox(Gtk.VBox):
 			self.root_folder=False
 			self.enable_entry_profile_dialog()
 			self.profile_pbar.hide()
-			self.profile_msg.hide()
+			self.profile_msg.set_text("")
 		
 			if len(self.syncfolders_model)>1:
 				self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT)
@@ -1165,8 +1185,9 @@ class ProfileBox(Gtk.VBox):
 				self.accept_add_profile_button.hide()
 				self.cancel_add_profile_button.hide()
 			else:
-				self.profile_msg.show()
-				self.profile_msg.set_name("MSG_ERROR_LABEL")
+				#self.profile_msg.show()
+				#self.profile_msg.set_name("MSG_ERROR_LABEL")
+				self.manage_profile_msg_box(False,True)
 				self.profile_msg.set_text(_("No folders detected on google drive profile"))	
 				self.accept_add_profile_button.show()
 				self.cancel_add_profile_button.show()
@@ -1203,8 +1224,9 @@ class ProfileBox(Gtk.VBox):
 
 		self.previous_root_folder=self.gdrive_folder_entry.get_text()
 		self.init_threads()
-		self.profile_msg.hide()
-		self.profile_msg.set_text("")
+		#self.profile_msg.hide()
+		#self.profile_msg.set_text("")
+		self.manage_profile_msg_box(True)
 		self.init_read_mountpoint_dialog()
 		
 
@@ -1214,9 +1236,6 @@ class ProfileBox(Gtk.VBox):
 	def apply_combobox_button_clicked(self,widget):
 
 		
-		#self.gdrive_folder_entry.set_text(self.folder)
-		#self.gdrive_folder=folder
-
 		self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_RIGHT)
 		self.stack.set_visible_child_name("edit")	
 		self.accept_add_profile_button.show()
@@ -1262,7 +1281,7 @@ class ProfileBox(Gtk.VBox):
 		lang=os.environ["LANG"]
 
 		if 'ca_ES' in lang:
-			cmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=LliureX-Gdrive-en-Bionic_va'
+			cmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=LliureX-Gdrive-en-Bionic.'
 		else:
 			cmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=LliureX-Gdrive-en-Bionic'
 
@@ -1272,11 +1291,14 @@ class ProfileBox(Gtk.VBox):
 
 	def global_management_button_clicked(self,widget,event=None):
 
+		self.manage_msg_box(True)
 		self.popover.show()
 
 	#def global_management_button_clicked	
 	
 	def manage_menu_indicator(self,widget,event=None):
+
+		self.manage_msg_box(False)
 
 		if not os.path.exists(self.disable_indicator):
 			f=open(self.disable_indicator,'w')
@@ -1305,8 +1327,9 @@ class ProfileBox(Gtk.VBox):
 
 	#def mouse_exit_popover	
 
-	def manage_profile_options(self,button,hbox,event=None):
+	def manage_profile_options(self,button,vbox,event=None):
 	
+		self.manage_msg_box(True)
 		button.popover.show()
 
 	#def manage_profile_options
@@ -1327,6 +1350,51 @@ class ProfileBox(Gtk.VBox):
 		else:
 			self.root_folder_param_entry.set_active(False)
 	
+	def manage_msg_box(self,hide,error=False):
+
+		if hide:
+			self.msg_box.set_name("HIDE_BOX")
+			self.msg_img_ok.hide()
+			self.msg_img_error.hide()
+			self.msg_label.set_text("")
+			self.msg_label.set_halign(Gtk.Align.CENTER)
+
+		else:
+			self.msg_label.set_halign(Gtk.Align.START)
+			if error:
+				self.msg_box.set_name("ERROR_BOX")
+				self.msg_img_ok.hide()
+				self.msg_img_error.show()
+			else:
+				self.msg_box.set_name("SUCCESS_BOX")
+				self.msg_img_ok.show()
+				self.msg_img_error.hide()
+
+	#def manage_msg_box
+
+	def manage_profile_msg_box(self,hide,error=False):
+
+		if hide:
+			self.profile_msg_box.set_name("HIDE_BOX")
+			self.profile_msg_img_ok.hide()
+			self.profile_msg_img_error.hide()
+			self.profile_msg.set_text("")
+			self.profile_msg.set_halign(Gtk.Align.CENTER)
+
+		else:
+			self.profile_msg.set_halign(Gtk.Align.START)
+			if error:
+				self.profile_msg_box.set_name("ERROR_BOX")
+				self.profile_msg_img_ok.hide()
+				self.profile_msg_img_error.show()
+			else:
+				self.profile_msg_box.set_name("SUCCESS_BOX")
+				self.profile_msg_img_ok.show()
+				self.profile_msg_img_error.hide()
+
+	#def manage_msg_box
+
+
 
 #class profilebox
 

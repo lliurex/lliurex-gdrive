@@ -22,7 +22,7 @@
 
 	#MSG_LABEL {
 
-		color: #3366cc;
+		color: #000000;
 		font: 11pt Roboto Bold;
 			
 	}	
@@ -166,7 +166,7 @@
 
 	#PROFILE_BOX {
 		background-color: #ffffff	;
-		box-shadow: -0.5px 3px 2px #cdcdcd;
+		/*box-shadow: -0.5px 3px 2px #cdcdcd;*/
 		
 	}
 	
@@ -209,37 +209,98 @@
 	}
 
 
-#CUSTOM-ENTRY
-{
+	#CUSTOM-ENTRY
+	{
 		color: @default-grey;
-		border: none;
+		border: 1px solid #aaaaaa;
 		/*border-radius: 5px;*/
 		/*background-color: @arc-blue;*/
-		border-bottom: 1px solid #aaaaaa;
+		/*border-bottom: 1px solid #aaaaaa;*/
 		padding: 4px;
 		/*background: #eeeeee;*/
 		
 		/*border-bottom: 2px solid transparent;*/
 	
-}
+	}	
 
-#CUSTOM-ENTRY:focus
-{
+	#CUSTOM-ENTRY:focus
+	{
 		color: @arc-blue;
-		border-bottom: 1px solid @arc-blue-light;
+		border:1px solid @arc-blue-light;
+		/*border-bottom: 1px solid @arc-blue-light;*/
 		/*border-bottom: 2px solid rgba(0,0,0,0);*/
 		/*background-color: transparent;*/
 		
 	
-}
-#CUSTOM-ENTRY:selected
-{
-	color: white;
-}
+	}
+	#CUSTOM-ENTRY:selected
+	{
+		color: white;
+	}
 
-#CUSTOM-ENTRY:disabled
-{
-	background-color: #bbbbbb;
-	border-bottom: 1px solid transparent;
-	color: #999999;
-}
+	#CUSTOM-ENTRY:disabled
+	{
+		background-color: #bbbbbb;
+		border:1px solid transparent  ;
+		/*border-bottom: 1px solid transparent;*/
+		color: #999999;
+	}
+
+	#SEPARATOR{
+
+		background-color: #bec0c1;
+
+	}
+
+	#WHITE_SEPARATOR{
+
+		background-color: #ffffff;
+
+	}
+
+	#LIST_BOX{
+		background: #ffffff;
+
+	}
+
+	#ERROR_BOX{
+
+		border-style:solid;
+		border-width: 1px;
+		border-radius: 0px;
+		border-color:#da4453;
+		background:#ebced2;
+	}
+
+	#SUCCESS_BOX{
+
+		border-style:solid;
+		border-width: 1px;
+		border-radius: 0px;
+		border-color:#27ae60;
+		background:#c7e3d4;
+	}
+
+	#INFORMATION_BOX{
+
+		border-style:solid;
+		border-width: 1px;
+		border-radius: 0px;
+		border-color:#3daee9;
+		background:#cbe3f0;
+	}
+
+	#HIDE_BOX{
+
+		border-style:none;
+		border-width: 0px;
+		border-radius: 0px;
+		border-color:transparent;
+		background:transparent;
+	}
+
+	#FEEDBACK_LABEL{
+		color: #000000;
+		font: 11pt Roboto Bold;
+	}
+

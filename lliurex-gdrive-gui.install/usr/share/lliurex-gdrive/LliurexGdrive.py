@@ -73,21 +73,11 @@ class LliurexGdrive:
 		self.main_window=builder.get_object("main_window")
 		self.main_window.set_title("Lliurex GDrive")
 		self.main_box=builder.get_object("main_box")
-		#self.help_button=builder.get_object("help_button")
 		self.check_window=builder.get_object("check_window")
 		self.check_pbar=builder.get_object("check_pbar")
 		self.check_plabel=builder.get_object("check_plabel")
 		self.check_window.set_transient_for(self.main_window)
 
-
-		#self.indicator_label=builder.get_object("indicator_label")
-		#self.indicator_switch=builder.get_object("indicator_switch")
-		'''
-		if os.path.exists(self.disable_indicator):
-			self.core.profile_box.popover.indicator_label(_("Show menu indicator"))
-			#self.indicator_switch.set_active(False)
-					
-		'''
 		self.profile_box=self.core.profile_box
 		self.main_box.add(self.profile_box)
 		
@@ -99,6 +89,8 @@ class LliurexGdrive:
 		self.load_info()
 		
 		self.main_window.show_all()
+		self.profile_box.manage_msg_box(True)
+	
 		
 	#def load_gui
 
@@ -191,30 +183,12 @@ class LliurexGdrive:
 	
 	#def quit
 
-	'''
-	def help_clicked(self,widget):
-
-		lang=os.environ["LANG"]
-
-		if 'ca_ES' in lang:
-			cmd='xdg-open http://wiki.lliurex.net/tiki-index.php?page=LliureX%2BGDrive_va'
-		else:
-			cmd='xdg-open http://wiki.lliurex.net/tiki-index.php?page=LliureX+Gdrive'
-
-		os.system(cmd)
-
-	#def help_clicked
-		
-	'''
 	def start_gui(self):
 		
 		GObject.threads_init()
 		Gtk.main()
 		
 	#def start_gui
-
-	
-	
 
 	
 #class LliurexRemoteInstaller
