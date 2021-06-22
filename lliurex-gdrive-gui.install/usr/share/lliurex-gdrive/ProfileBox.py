@@ -342,6 +342,7 @@ class ProfileBox(Gtk.VBox):
 
 		self.edition=False
 		self.manage_msg_box(True)
+		self.manage_profile_msg_box(True)
 		self.msg_label.set_text("")
 		is_chromium_favourite=self.core.LliurexGoogleDriveManager.is_chromium_favourite_browser()
 		changed_browser=True
