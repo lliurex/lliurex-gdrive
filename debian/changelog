@@ -1,3 +1,10 @@
+lliurex-gdrive (0.4.2) focal; urgency=medium
+
+  * Fixed zero app file
+  * Added call to hide message box when added new profile
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 22 Jun 2021 14:48:41 +0200
+
 lliurex-gdrive (0.4.1) focal; urgency=medium
 
   * Fixed link to help
