@@ -1,3 +1,9 @@
+lliurex-gdrive (0.3.46.1) bionic-updates; urgency=medium
+
+  * Removed zero-centes files
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 17 Jan 2022 10:53:04 +0100
+
 lliurex-gdrive (0.3.46) bionic; urgency=medium
 
   * Updated link to the wiki
