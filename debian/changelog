@@ -1,3 +1,9 @@
+lliurex-gdrive (0.4.3.1) focal; urgency=medium
+
+  * Removed zero-center files
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 17 Jan 2022 09:35:56 +0100
+
 lliurex-gdrive (0.4.3) focal; urgency=medium
 
   * Updated help link
